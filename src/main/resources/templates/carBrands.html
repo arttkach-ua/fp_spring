@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Material CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <!-- BootStrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <title th:text="#{title}"></title>
+</head>
+<body>
+<div th:insert="navigation/adminNavbar.html">...</div>
+<main class="m-3">
+    <div class="row col-md-6">
+        <table class="table table-striped table-bordered table-sm">
+            <caption style="caption-side: top" th:text="#{navbar.brands}">Car brands</caption>
+            <thead>
+            <tr>
+                <th th:text="#{id}"/>
+                <th th:text="#{car_brand}"/>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="carBrands" type="com.epam.tkach.carrent.util.pagination.Paged<com.epam.tkach.carrent.entity.CarBrand>"*/-->
+            <tr th:each="carBrand : ${carBrands.page}">
+                <td th:text="${carBrand.id}">id</td>
+                <td th:text="${carBrand.carBrandName}">title</td>
+            </tr>
+            </tbody>
+        </table>
+        <!--Pagination-->
+        <nav aria-label="Page navigation" class="paging">
+            <ul class="pagination" th:if="${carBrands.page.totalPages > 1}">
+                <li class="page-item" th:classappend="${!carBrands.paging.isPrevEnabled()? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'/carBrands?pageNumber=' + ${carBrands.paging.pageNumber - 1}}"
+                       tabindex="-1" th:text="#{pagination.previous}">Previous</a>
+                </li>
+                <th:block th:each="item : ${carBrands.paging.getItems()}">
+                    <li class="page-item" th:classappend="${item.index == carBrands.paging.pageNumber? 'active' : ''}"
+                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                        <a class="page-link" th:href="@{'/carBrands?pageNumber=' + ${item.index}}"
+                           th:text="${item.index}"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${!carBrands.paging.isNextEnabled()? 'disabled' : ''}">
+                    <a class="page-link"
+                       th:href="@{'/carBrands?pageNumber=' + ${carBrands.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+
+<a class="btn btn-primary" id="add-new-model" href="addNewBrand" role="button" th:text="#{add_new_car_brand}">add new
+    car brand</a>
+</body>
+</html>

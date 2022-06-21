@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+
+<!--Tariff page-->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" th:text="#{edit_tariff}">...</div>
+                <div class="card-body">
+
+                    <form class="form-horizontal" method="POST" th:action="@{/tariff/save}" th:object="${tariffDto}">
+
+                        <!--ID-->
+                        <div class="form-group">
+                            <input type="number" th:type="hidden" name="id" id="id" th:field="*{id}"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name" class="cols-sm-2 control-label" th:text="#{tariff_name}">Name</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="name" id="name" th:field="*{name}" th:errorclass="fieldError"  th:placeholder="#{tariff_name.placeholder}" />
+                                </div>
+                            </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('name')}"
+                                 th:each="e : ${#fields.errors('name')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rentPrice" class="cols-sm-2 control-label" th:text="#{price_per_day}">price</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="rentPrice" id="rentPrice" th:field="*{rentPrice}" th:errorclass="fieldError" th:placeholder="#{rent_price.placeholder}"/>
+                                </div>
+                            </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('rentPrice')}"
+                                 th:each="e : ${#fields.errors('rentPrice')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="driverPrice" class="cols-sm-2 control-label" th:text="#{driver_price}">driver price</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="driverPrice" id="driverPrice" th:field="*{driverPrice}" th:errorclass="fieldError" th:placeholder="#{driver_price.placeholder}" />
+                                </div>
+                            </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('driverPrice')}"
+                                 th:each="e : ${#fields.errors('driverPrice')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block login-button" th:text="#{save_changes}">
+                                save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

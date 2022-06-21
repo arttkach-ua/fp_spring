@@ -1,9 +1,7 @@
 package com.epam.tkach.carrent.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.epam.tkach.carrent.util.dto.TariffDto;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +13,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "tariffs")
 public class Tariff{
     @Id
@@ -34,14 +33,21 @@ public class Tariff{
     @Positive(message = "error.nullDriverPriceName")
     private double driverPrice;
 
+    public static Tariff getFromDTO(TariffDto dto){
+        Tariff tariff = new Tariff();
+        tariff.setId(dto.getId());
+        tariff.setName(dto.getName());
+        tariff.setRentPrice(dto.getRentPrice());
+        tariff.setDriverPrice(dto.getDriverPrice());
+        return tariff;
+    }
 
-    @Override
-    public String toString() {
-        return "Tariff{" +
-                "name='" + name + '\'' +
-                ", rentPrice=" + rentPrice +
-                ", driverPrice=" + driverPrice +
-                ", ID=" + id +
-                '}';
+    public static TariffDto toDTO(Tariff tariff){
+        TariffDto dto = new TariffDto();
+        dto.setId(tariff.getId());
+        dto.setName(tariff.getName());
+        dto.setRentPrice(tariff.getRentPrice());
+        dto.setDriverPrice(tariff.getDriverPrice());
+        return dto;
     }
 }

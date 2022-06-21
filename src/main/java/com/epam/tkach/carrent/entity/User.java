@@ -2,24 +2,26 @@ package com.epam.tkach.carrent.entity;
 
 import com.epam.tkach.carrent.Messages;
 import com.epam.tkach.carrent.entity.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.epam.tkach.carrent.util.dto.UserDto;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.util.Arrays;
-import java.util.StringJoiner;
+import java.util.*;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -48,7 +50,7 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(name="blocked")
@@ -61,6 +63,23 @@ public class User {
     boolean receiveNotifications;
 
 
+    public static User getFromDTO(UserDto userDTO){
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setEmail(userDTO.getEmail());
+        user.setFirstName(userDTO.getFirstName());
+        user.setSecondName(userDTO.getSecondName());
+        user.setDocumentInfo(userDTO.getDocumentInfo());
+        user.setPhone(userDTO.getPhoneNumber());
+        user.setPassword(userDTO.getPassword());
+        user.setReceiveNotifications(userDTO.isReceiveEmails());
+        if (userDTO.getRole()==null||userDTO.getRole().isEmpty()){
+            userDTO.setRole("CLIENT");
+        }
+        user.setRole(Role.valueOf(userDTO.getRole()));
+        return user;
+    }
+
     public String getFullName(){
         StringJoiner joiner = new StringJoiner(" ");
         joiner.add(firstName);
@@ -69,19 +88,37 @@ public class User {
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", documentInfo='" + documentInfo + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", blocked=" + blocked +
-                ", salt=" + Arrays.toString(salt) +
-                ", receiveNotifications=" + receiveNotifications +
-                ", ID=" + id +
-                '}';
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> auth = new HashSet<>();
+        auth.add(new SimpleGrantedAuthority("ROLE_" + "ADMIN"));
+        auth.add(new SimpleGrantedAuthority("ROLE_" + "CLIENT"));
+        auth.add(new SimpleGrantedAuthority("ROLE_" + "MANAGER"));
+        //getAuthorities().forEach(r->auth.add(new SimpleGrantedAuthority(r.getAuthority())));
+        return auth;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

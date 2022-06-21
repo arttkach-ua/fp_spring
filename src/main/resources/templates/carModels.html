@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Material CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <!-- BootStrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <title th:text="#{title}"></title>
+</head>
+<body>
+<div th:insert="navigation/adminNavbar.html">...</div>
+<main class="m-3">
+    <div class="row col-md-6">
+        <table class="table table-striped table-bordered table-sm">
+            <caption style="caption-side: top" th:text="#{navbar.models}">Car brands</caption>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th th:text="#{car_class}">Car class</th>
+                <th th:text="#{car_brand}">Car brand</th>
+                <th th:text="#{car_model}">Car model</th>
+                <th th:text="#{edit}">Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="model : ${carModels.page}">
+                    <td th:text="${model.id}">id</td>
+                    <td th:text="#{${model.carClass}}">car class</td>
+                    <td th:text="${model.getBrand().getCarBrandName()}">title</td>
+                    <td th:text="${model.getModelName()}">title</td>
+                    <td><a th:href="@{carModel/edit/{id}(id=${model.id})}"th:text="#{edit}"/></td>
+                </tr>
+            </tbody>
+        </table>
+        <!--Pagination-->
+        <nav aria-label="Page navigation" class="paging">
+            <ul class="pagination" th:if="${carModels.page.totalPages > 1}">
+                <li class="page-item" th:classappend="${!carModels.paging.isPrevEnabled()? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'/carModels?pageNumber=' + ${carModels.paging.pageNumber - 1}}"
+                       tabindex="-1" th:text="#{pagination.previous}">Previous</a>
+                </li>
+                <th:block th:each="item : ${carModels.paging.getItems()}">
+                    <li class="page-item" th:classappend="${item.index == carModels.paging.pageNumber? 'active' : ''}"
+                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                        <a class="page-link" th:href="@{'/carModels?pageNumber=' + ${item.index}}"
+                           th:text="${item.index}"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${!carModels.paging.isNextEnabled()? 'disabled' : ''}">
+                    <a class="page-link"
+                       th:href="@{'/carModels?pageNumber=' + ${carModels.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </div>
+</main>
+<a class="btn btn-primary" id = "add-new-model" href="newCarModel" role="button" th:text="#{add_new_car_model}">Add new car model</a>
+</body>
+</html>

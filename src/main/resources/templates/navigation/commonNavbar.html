@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="./">
+            <img src="img/logo.png" width="40" height="40" class="d-inline-block align-top" alt="" th:text="#{title}">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCars" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false" th:text="#{navbar.cars}">
+                        navbar.cars
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="controller?action=carList" th:text="#{navbar.company_cars}">navbar.company_cars</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:text="#{navbar.about_us}">navbar.about_us</a>
+                </li>
+            </ul>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons">
+                        language
+                    </i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form class="form-inline" method="get" action="international">
+                        <button type="submit" name="ua" class="dropdown-item" >Ukrainian</button>
+                        <button type="submit" name="en" class="dropdown-item">English</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Example single danger button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="#{navbar.account}">
+                    "navbar.account"
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="login" th:text="#{navbar.login}">Login</a>
+                    <a class="dropdown-item" href="registration" th:text="#{register}">Reg</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

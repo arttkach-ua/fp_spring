@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- Material CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <!-- BootStrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <!--Not working. Find why???????
+    <script src="/static/scripts/carScripts.js"></script>
+    <link rel="shortcut icon" href="/static/img/favicon.png"/>
+    -->
+    <title th:text="#{title}"></title>
+</head>
+<body>
+<div th:insert="navigation/adminNavbar.html">...</div>
+<!--New complete set form -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" th:text="#{new_complete_set}">Edit complete set</div>
+                <div class="card-body">
+
+                    <form class="form-horizontal" method="POST" th:action="@{/saveCompleteSet}" th:object="${completeSetDto}">
+                        <!--ID-->
+                        <div class="form-group">
+                            <input type="number" th:type="hidden" name="id" id="id" th:field="*{id}"/>
+                        </div>
+                        <!--Car brand-->
+                        <div class="form-group">
+                            <label for="carBrand" class="control-label cols-sm-2" th:text="#{car_brand}">car brand</label>
+                            <select class="form-control" id="carBrand" name="carBrand" th:field="*{carBrand}" th:errorclass="fieldError" onchange="setCarModels()">
+                                <option  selected value=-1 th:text="#{select_general_placeholder}">option</option>
+                                <option th:each="option : ${carBrands}" th:value="${option.getId()}" th:text="${option.getCarBrandName()}"
+                                        th:selected="${option.getId() == completeSetDto.getCarBrandId()}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('carBrand')}"
+                                 th:each="e : ${#fields.errors('carBrand')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <!--Car model-->
+                        <div class="form-group">
+                            <label for="carModel" class="control-label cols-sm-2" th:text="#{car_model}">Car model</label>
+                            <select class="form-control" name="carModel" id="carModel" th:field="*{carModel}">
+                                <option th:each="option : ${carModels}" th:value="${option.getId()}" th:text="${option.getModelName()}"
+                                        th:selected="${option.getId() == completeSetDto.getCarModelId()}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('carModel')}"
+                                 th:each="e : ${#fields.errors('carModel')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+                        <!--Body style-->
+                        <div class="form-group">
+                            <label for="bodyStyle" class="control-label cols-sm-2" th:text="#{body_style}">Body style</label>
+                            <select class="form-control" id="bodyStyle" name="bodyStyle" th:field="*{bodyStyle}" th:errorclass="fieldError">
+                                <option  selected value="" th:text="#{select_general_placeholder}">option</option>
+                                <option th:each="option : ${bodyStyleList}" th:value="${option}" th:text="#{${option}}"
+                                        th:selected="${option == completeSetDto.bodyStyle}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('bodyStyle')}"
+                                 th:each="e : ${#fields.errors('bodyStyle')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+                        <!--Transmission-->
+                        <div class="form-group">
+                            <label for="transmission" class="control-label cols-sm-2" th:text="#{transmission}">Transmission</label>
+                            <select class="form-control" id="transmission" name="transmission" th:field="*{transmission}" th:errorclass="fieldError">
+                                <option  selected value="" th:text="#{select_general_placeholder}">option</option>
+                                <option th:each="option : ${transmissionList}" th:value="${option}" th:text="#{${option}}"
+                                        th:selected="${option == completeSetDto.transmission}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('transmission')}"
+                                th:each="e : ${#fields.errors('transmission')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+                        <!--Fuel type-->
+                        <div class="form-group">
+                            <label for="fuelType" class="control-label cols-sm-2" th:text="#{fuel_type}">Fuel type</label>
+                            <select class="form-control" id="fuelType" name="fuelType" th:field="*{fuelType}" th:errorclass="fieldError">
+                                <option  selected value="" th:text="#{select_general_placeholder}">option</option>
+                                <option th:each="option : ${fuelTypesList}" th:value="${option}" th:text="#{${option}}"
+                                        th:selected="${option == completeSetDto.fuelType}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('fuelType')}"
+                                 th:each="e : ${#fields.errors('fuelType')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+                        <!--Engine-->
+                        <div class="form-group">
+                            <label for="engine" class="control-label cols-sm-2" th:text="#{engine}">Engine</label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="number" step="0.1" min="0.1" max="10" class="form-control" name="engine" id="engine" th:placeholder="#{engine.placeholder}" th:field="*{engine}"th:errorclass="fieldError" />
+                                </div>
+                            </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('engine')}"
+                                 th:each="e : ${#fields.errors('engine')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block login-button" th:text="#{add_complete_set}">
+                                Edit complete set
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function setCarModels() {
+        console.log("AAA");
+         $('#carModel').find('option').remove();
+         $('#carModel').append('<option th:text="#{select_general_placeholder}">...</option>');
+
+         let brand_id = $('#carBrand').val();
+         let data = {
+             //operation: "car_model",
+             id: brand_id
+         };
+         $.ajax({
+             url: "RestGetCarModels",
+             method: "GET",
+             data: data,
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+                let obj = $.parseJSON(data);
+                $.each(obj, function (key, value) {
+                    $('#carModel').append('<option value="' + value.id + '">' + value.modelName + '</option>')
+                });
+                //$('select').formSelect();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#carModel').append('<option>Car model Unavailable</option>');
+            },
+            cache: false
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,9 +1,9 @@
 package com.epam.tkach.carrent.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.epam.tkach.carrent.entity.enums.Role;
+import com.epam.tkach.carrent.util.dto.CarBrandDto;
+import com.epam.tkach.carrent.util.dto.UserDto;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "car_brands")
 public class CarBrand{
     @Id
@@ -25,4 +26,11 @@ public class CarBrand{
     @Size(min = 2,max = 150,message = "error.nullCarBrandName")
     String carBrandName;
 
+    public static CarBrand getFromDTO(CarBrandDto dto){
+        CarBrand carBrand = new CarBrand();
+        carBrand.setId(dto.getId());
+        carBrand.setCarBrandName(dto.getCarBrandName());
+
+        return carBrand;
+    }
 }

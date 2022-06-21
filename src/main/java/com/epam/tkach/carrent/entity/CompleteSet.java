@@ -3,10 +3,8 @@ package com.epam.tkach.carrent.entity;
 import com.epam.tkach.carrent.entity.enums.BodyStyles;
 import com.epam.tkach.carrent.entity.enums.FuelTypes;
 import com.epam.tkach.carrent.entity.enums.TransmissionTypes;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.epam.tkach.carrent.util.dto.CompleteSetDto;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,6 +17,7 @@ import java.util.StringJoiner;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "complete_sets", schema = "car_rent_spring")
 public class CompleteSet{
     @Id
@@ -65,16 +64,29 @@ public class CompleteSet{
         this.name = joiner.toString();
     }
 
-    @Override
-    public String toString() {
-        return "CompleteSet{" +
-                "name='" + name + '\'' +
-                ", carModel=" + carModel +
-                ", bodyStyle=" + bodyStyle +
-                ", transmission=" + transmission +
-                ", fuelType=" + fuelType +
-                ", engine=" + engine +
-                ", ID=" + id +
-                '}';
+    public static CompleteSet getFromDTO(CompleteSetDto dto){
+        CompleteSet completeSet = new CompleteSet();
+        completeSet.setId(dto.getId());
+        completeSet.setCarModel(dto.getCarModel());
+        completeSet.setBodyStyle(dto.getBodyStyle());
+        completeSet.setTransmission(dto.getTransmission());
+        completeSet.setFuelType(dto.getFuelType());
+        completeSet.setEngine(dto.getEngine());
+        completeSet.generateName();
+
+        return completeSet;
+    }
+
+    public static CompleteSetDto toDTO(CompleteSet completeSet){
+        CompleteSetDto dto = new CompleteSetDto();
+        dto.setId(completeSet.getId());
+        dto.setName(completeSet.getName());
+        dto.setBodyStyle(completeSet.getBodyStyle());
+        dto.setCarBrand(completeSet.getCarModel().getBrand());
+        dto.setCarModel(completeSet.getCarModel());
+        dto.setTransmission(completeSet.getTransmission());
+        dto.setFuelType(completeSet.getFuelType());
+        dto.setEngine(completeSet.getEngine());
+        return dto;
     }
 }
