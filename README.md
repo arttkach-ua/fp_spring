@@ -21,3 +21,5 @@
 - блокування/розблокування користувачів;
 - реєстрація менеджерів в системі.
 
+#Схема бази данних
+![alt text](https://github.com/arttkach-ua/fp_spring/blob/master/shema.png?raw=true)
