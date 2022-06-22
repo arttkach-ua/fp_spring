@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!--Navigation-->
+    <div sec:authorize="!isAuthenticated()">
+        <div th:insert="navigation/commonNavbar.html">...</div>
+    </div>
+    <div sec:authorize="hasRole('ROLE_ADMIN')">
+        <div th:insert="navigation/adminNavbar.html">...</div>
+    </div>
+    <div sec:authorize="hasRole('ROLE_CLIENT')">
+        <div th:insert="navigation/clientNavbar.html">...</div>
+    </div>
+    <div sec:authorize="hasRole('ROLE_MANAGER')">
+        <div th:insert="navigation/managerNavbar.html">...</div>
+    </div>
+    <!--Navigation-->
+</body>
+</html>

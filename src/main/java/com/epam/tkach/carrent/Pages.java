@@ -12,8 +12,10 @@ public class Pages {
     public static final String CAR_MODELS = "carModels";
     public static final String COMPLETE_SETS = "completeSets";
     public static final String TARIFFS = "tariffs";
+    public static final String USERS = "users";
 
     //Etc
     public static final String LOGIN = "login";
     public static final String ERROR = "errorPage";
+    public static final String MY_PROFILE = "myProfile";
 }

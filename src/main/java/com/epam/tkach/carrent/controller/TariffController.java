@@ -62,15 +62,12 @@ public class TariffController {
     public String saveTariff(@Valid TariffDto tariffDto,
                              BindingResult bindingResult,
                              Model model){
-        System.out.println("start");
         if (bindingResult.hasErrors()) {
 
-            System.out.println("error");
             return Pages.TARIFF_PAGE;
         }
-        System.out.println("succes");
         tariffService.save(tariffDto);
-        logger.debug("adding new Car model");
+        logger.debug("saving tariff");
         logger.debug(tariffDto.toString());
         return "redirect:/" + "tariff/list";
     }

@@ -45,7 +45,7 @@ public class RegistrationController {
 
         }
         System.out.println("post mapping");
-        userService.saveUser(userDto);
+        userService.createNewUser(userDto);
         System.out.println(userDto.toString());
         logger.debug(userDto.toString());
         return "login";

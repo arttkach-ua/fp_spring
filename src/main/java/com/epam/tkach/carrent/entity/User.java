@@ -80,6 +80,20 @@ public class User implements UserDetails {
         return user;
     }
 
+    public static UserDto toDTO(User user){
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setSecondName(user.getSecondName());
+        userDto.setDocumentInfo(user.getDocumentInfo());
+        userDto.setPhoneNumber(user.getPhone());
+        userDto.setPassword(user.getPassword());
+        userDto.setReceiveNotifications(Boolean.toString(user.isReceiveNotifications()));
+
+        return userDto;
+    }
+
     public String getFullName(){
         StringJoiner joiner = new StringJoiner(" ");
         joiner.add(firstName);

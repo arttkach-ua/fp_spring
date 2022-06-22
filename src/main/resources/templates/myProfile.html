@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header" th:text="#{navbar.my_profile}">My profile</div>
+                    <div class="card-body">
+                        <!--/*@thymesVar id="userDto" type="com.epam.tkach.carrent.util.dto.UserDto"*/-->
+                        <form class="form-with-validation" name="my-form" th:object="${userDto}" th:action="@{/users/save}" method="post">
+                            <!--ID-->
+                            <div class="form-group">
+                                <input type="number" th:type="hidden" name="id" id="id" th:field="*{id}"/>
+                            </div>
+                            <!--Email-->
+                            <div class="form-group row">
+                                <label for="email" class="col-md-4 col-form-label text-md-right" th:text="#{email}">email</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="email" class="form-control" name="email"
+                                           th:placeholder="#{email.placeholder}" th:field="*{email}" th:errorclass="fieldError">
+                                    <div class="status" id="status"></div>
+                                </div>
+                            </div>
+                            <!--First name-->
+                            <div class="form-group row">
+                                <label for="firstName" class="col-md-4 col-form-label text-md-right" th:text="#{first_name}">first name</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="firstName" class="form-control" name="firstName"
+                                           th:placeholder="#{first_name.placeholder}" th:field="*{firstName}" th:errorclass="fieldError">
+                                </div>
+                            </div>
+                            <!--Second name-->
+                            <div class="form-group row">
+                                <label for="secondName" class="col-md-4 col-form-label text-md-right" th:text="#{second_name}">Second name</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="secondName"
+                                           th:placeholder="#{second_name.placeholder}" th:field="*{secondName}" th:errorclass="fieldError">
+                                </div>
+                            </div>
+                            <!--Phone name-->
+                            <div class="form-group row">
+                                <label for="phoneNumber" class="col-md-4 col-form-label text-md-right" th:text="#{phone_number}">phone number</label>
+                                <div class="col-md-6">
+                                    <input type="tel" id="phoneNumber" class="form-control" th:field="*{phoneNumber}" th:errorclass="fieldError"
+                                           th:placeholder="#{phone_number.placeholder}">
+                                </div>
+                            </div>
+                            <!--Document-->
+                            <div class="form-group row">
+                                <label for="documentInfo" class="col-md-4 col-form-label text-md-right" th:text="#{document_info}">document</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="documentInfo" class="form-control" th:field="*{documentInfo}" th:errorclass="fieldError"
+                                           th:placeholder="#{document_info.placeholder}">
+                                </div>
+                            </div>
+
+                            <!--
+                            <div class = "form-group row">
+                                <div class="form-check form-check-inline col-md-4">
+                                    <input class="form-check-input" type="checkbox" id="receiveNotifications" th:field="*{receiveNotifications}" th:errorclass="fieldError">
+                                    <label class="form-check-label" for="receiveNotifications" th:text="#{receive_notifications}">receive_notifications</label>
+                                </div>
+                            </div>
+                            -->
+
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary" id="submit" th:text="#{save_changes}">
+                                    save_changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

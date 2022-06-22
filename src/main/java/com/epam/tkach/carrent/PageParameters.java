@@ -13,4 +13,5 @@ public class PageParameters {
     public static final String CAR_MODEL_DTO = "carModelDto";
     public static final String COMPLETE_SET_DTO = "completeSetDto";
     public static final String TARIFF_DTO = "tariffDto";
+    public static final String USER_DTO = "userDto";
 }

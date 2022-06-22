@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<!--Car list form-->
+<form method="get">
+    <main class="m-3">
+        <div class="row col-md-6">
+            <table class="table table-striped table-bordered table-sm">
+                <caption style="caption-side: top" th:text="#{navbar.company_cars}"></caption>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" th:text="#{available}"></th>
+                    <th scope="col" th:text="#{car_class}"></th>
+                    <th scope="col" th:text="#{car_brand}"></th>
+                    <th scope="col" th:text="#{car_model}"></th>
+                    <th scope="col" th:text="#{year}"></th>
+                    <th scope="col" th:text="#{engine}"></th>
+                    <th scope="col" th:text="#{transmission}"></th>
+                    <th scope="col" th:text="#{fuel_type}"></th>
+                    <th scope="col" th:text="#{vin_code}"></th>
+                    <th scope="col" th:text="#{state_number}"></th>
+                    <th scope="col" th:text="#{price_per_day}"></th>
+                    <th scope="col" th:text="#{driver_price}"></th>
+                </tr>
+
+                <tr th:each="entity : ${entityList.page}">
+                    <div sec:authorize="hasRole('ROLE_ADMIN')">
+                        <td><a th:href="@{car/edit/{id}(id=${entity.id})" th:text="${entity.id}"></a></td>
+                    </div>
+                    <div sec:authorize="!hasRole('ROLE_ADMIN')">
+                        <td th:text="#{entity.id()}"></td>
+                    </div>
+                    <td th:text="${entity.isAvailable()}"></td>
+                    <td th:text="#{${entity.getCarClass()}}"></td>
+                    <td th:text="${entity.getBrand().getCarBrandName()}"></td>
+                    <td th:text="${entity.getModel().getModelName()}"></td>
+                    <td th:text="${entity.getGraduationYear()}"></td>
+                    <td th:text="${entity.getCompleteSet().getEngine()}"></td>
+                    <td th:text="#{${entity.getCompleteSet().getTransmission()}}"></td>
+                    <td th:text="#{${entity.getCompleteSet().getFuelType()}}"></td>
+                    <td th:text="${entity.getVinCode()}"></td>
+                    <td th:text="${entity.getStateNumber()}"></td>
+                    <td th:text="${entity.getTariff().getRentPrice()}"></td>
+                    <td th:text="${entity.getTariff().getDriverPrice()}"></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+</form>
+</body>
+</html>

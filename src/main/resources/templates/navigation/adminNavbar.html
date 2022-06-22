@@ -18,22 +18,22 @@
                        aria-haspopup="true" aria-expanded="false" th:text="#{navbar.cars}">
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="carBrands" th:text="#{navbar.brands}">1</a>
-                        <a class="dropdown-item" href="carModels" th:text="#{navbar.models}">2</a>
-                        <a class="dropdown-item" href="completeSets" th:text="#{navbar.completeSets}">3</a>
+                        <a class="dropdown-item" th:href="@{/carBrands/list}" th:text="#{navbar.brands}">1</a>
+                        <a class="dropdown-item" th:href="@{/carModels/list}" th:text="#{navbar.models}">2</a>
+                        <a class="dropdown-item" th:href="@{/completeSets/list}" th:text="#{navbar.completeSets}">3</a>
 
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="cars" th:text="#{navbar.company_cars}">4</a>
+                        <a class="dropdown-item" th:href="@{/cars/list}" th:text="#{navbar.company_cars}">4</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/users/list" th:text="#{navbar.users}">Users</a>
+                    <a class="nav-link" th:href="@{/users/list}" th:text="#{navbar.users}">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="tariff/list" th:text="#{navbar.tariffs}">tariffs</a>
+                    <a class="nav-link" th:href="@{/tariff/list}" th:text="#{navbar.tariffs}">tariffs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="myProfile" th:text="#{navbar.my_profile}">my profile</a>
+                    <a class="nav-link" th:href="@{/users/myProfile}" th:text="#{navbar.my_profile}">my profile</a>
                 </li>
             </ul>
             <div class="dropdown">

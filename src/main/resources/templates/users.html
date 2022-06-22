@@ -1,10 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <div th:insert="fragments/head.html">...</div>
 </head>
 <body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<main class="m-3">
+    <div class="row col-md-6">
+        <table class="table table-striped table-bordered table-sm">
+            <caption style="caption-side: top" th:text="#{users_list}">Users</caption>
+            <thead>
+            <tr>
+                <th th:text="#{id}"/>
+                <th th:text="#{email}"/>
+                <th th:text="#{first_name}"/>
+                <th th:text="#{second_name}"/>
+                <th th:text="#{document_info}"/>
+                <th th:text="#{phone_number}"/>
+                <th th:text="#{role}"/>
+                <th th:text="#{blocked}"/>
+                <th th:text="#{receive_notifications}"/>
+                <th th:text="#{edit}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="entityList" type="com.epam.tkach.carrent.util.pagination.Paged<com.epam.tkach.carrent.util.dto.TariffDto>"*/-->
+            <tr th:each="entity : ${entityList.page}">
+                <td th:text="${entity.getId()}">id</td>
+                <td th:text="${entity.getEmail()}">title</td>
+                <td th:text="${entity.getFirstName()}">title</td>
+                <td th:text="${entity.getSecondName()}">title</td>
 
+                <td th:text="${entity.getDocumentInfo()}">title</td>
+                <td th:text="${entity.getPhone()}">title</td>
+                <td th:text="#{${entity.getRole()}}">title</td>
+                <td>
+                    <div th:if="${entity.isBlocked()}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-lock-fill" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path>
+                        </svg>
+                        <p th:text="#{${entity.isBlocked()}}"/>
+                    </div>
+                </td>
+                <td>
+                     <div th:if="${entity.isReceiveNotifications()}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+                            <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z"/>
+                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z"/>
+                        </svg>
+                         <p th:text="#{${entity.isReceiveNotifications()}}"/>
+                    </div>
+                </td>
+
+                <td>
+                    <div th:if="${!entity.isBlocked()}">
+                        <a th:href="@{/users/setBlock(id=${entity.id},newStatus = true)}" th:text="#{block_user}" class="btn btn-danger"/>
+                    </div>
+                    <div th:if="${entity.isBlocked()}">
+                        <a th:href="@{/users/setBlock(id=${entity.id},newStatus = false)}" th:text="#{unblock_user}" class="btn btn-success"/>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <!--Pagination-->
+        <nav aria-label="Page navigation" class="paging">
+            <ul class="pagination" th:if="${entityList.page.totalPages > 1}">
+                <li class="page-item" th:classappend="${!entityList.paging.isPrevEnabled()? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'/tariffs?pageNumber=' + ${entityList.paging.pageNumber - 1}}"
+                       tabindex="-1" th:text="#{pagination.previous}">Previous</a>
+                </li>
+                <th:block th:each="item : ${entityList.paging.getItems()}">
+                    <li class="page-item" th:classappend="${item.index == entityList.paging.pageNumber? 'active' : ''}"
+                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                        <a class="page-link" th:href="@{'/tariffs?pageNumber=' + ${item.index}}"
+                           th:text="${item.index}"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${!entityList.paging.isNextEnabled()? 'disabled' : ''}">
+                    <a class="page-link"
+                       th:href="@{'/tariffs?pageNumber=' + ${entityList.paging.pageNumber + 1}}"
+                       th:text="#{pagination.next}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</main>
+<a class="btn btn-primary" id = "add-new" th:href="@{add}" role="button" th:text="#{add_new_user}">Add new user</a>
 </body>
 </html>

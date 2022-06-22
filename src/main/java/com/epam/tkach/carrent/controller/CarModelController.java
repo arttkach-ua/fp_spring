@@ -31,7 +31,7 @@ public class CarModelController {
     @Autowired
     private CarModelService carModelService;
 
-    @GetMapping(value = Pages.CAR_MODELS)
+    @GetMapping("carModels/list")
     public String showCarBrands(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                                 @RequestParam(value = "size", required = false, defaultValue = "5") int size, Model model) {
 
