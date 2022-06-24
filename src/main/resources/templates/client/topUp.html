@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<!--Top up form -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" th:text="#{label.top_up}"></div>
+                <div class="card-body">
+
+                    <form class="form-horizontal" method="POST" th:object="${transactionDto}" th:action="@{/users/topUp}">
+
+                        <div class="form-group">
+                            <label for="sum" class="cols-sm-2 control-label" th:text="#{sum}"/>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                    <input type="number" step="0.1" min="0.1" class="form-control" name="sum" id="sum" th:placeholder="#{sum.placeholder}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block login-button" th:text="#{label.top_up}"/>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

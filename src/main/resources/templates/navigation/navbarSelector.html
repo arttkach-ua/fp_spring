@@ -10,15 +10,19 @@
     <!--Navigation-->
     <div sec:authorize="!isAuthenticated()">
         <div th:insert="navigation/commonNavbar.html">...</div>
+        <p>common</p>
     </div>
     <div sec:authorize="hasRole('ROLE_ADMIN')">
         <div th:insert="navigation/adminNavbar.html">...</div>
+        <p>admin</p>
     </div>
-    <div sec:authorize="hasRole('ROLE_CLIENT')">
+    <div sec:authorize="hasRole('ROLE_CLIENT') ">
         <div th:insert="navigation/clientNavbar.html">...</div>
+        <p>client</p>
     </div>
     <div sec:authorize="hasRole('ROLE_MANAGER')">
         <div th:insert="navigation/managerNavbar.html">...</div>
+        <p>managet</p>
     </div>
     <!--Navigation-->
 </body>

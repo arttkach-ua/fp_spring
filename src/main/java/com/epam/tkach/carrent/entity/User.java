@@ -104,10 +104,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> auth = new HashSet<>();
-        auth.add(new SimpleGrantedAuthority("ROLE_" + "ADMIN"));
-        auth.add(new SimpleGrantedAuthority("ROLE_" + "CLIENT"));
-        auth.add(new SimpleGrantedAuthority("ROLE_" + "MANAGER"));
-        //getAuthorities().forEach(r->auth.add(new SimpleGrantedAuthority(r.getAuthority())));
+        switch (role){
+            case ADMIN: auth.add(new SimpleGrantedAuthority("ROLE_" + "ADMIN")); break;
+            case CLIENT: auth.add(new SimpleGrantedAuthority("ROLE_" + "CLIENT")); break;
+            case MANAGER: auth.add(new SimpleGrantedAuthority("ROLE_" + "MANAGER")); break;
+        }
         return auth;
     }
 

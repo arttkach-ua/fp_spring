@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,10 +36,15 @@ public class CompleteSetsService {
     public void save(CompleteSetDto dto){
         completeSetsRepository.save(CompleteSet.getFromDTO(dto));
     }
+
     public CompleteSet findById(int id) throws NoSuchCompleteSetException {
         Optional<CompleteSet> opt = completeSetsRepository.findById(id);
         if (!opt.isPresent()) throw new NoSuchCompleteSetException("error.CompleteSetNotFound");
         return opt.get();
 
+    }
+
+    public List<CompleteSet> findByModelId(int modelId){
+        return completeSetsRepository.findAllByCarModel_Id(modelId);
     }
 }

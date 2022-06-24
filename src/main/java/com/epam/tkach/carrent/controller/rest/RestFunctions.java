@@ -1,7 +1,9 @@
 package com.epam.tkach.carrent.controller.rest;
 
 import com.epam.tkach.carrent.entity.CarModel;
+import com.epam.tkach.carrent.entity.CompleteSet;
 import com.epam.tkach.carrent.service.CarModelService;
+import com.epam.tkach.carrent.service.CompleteSetsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class RestFunctions {
     @Autowired
     CarModelService carModelService;
 
+    @Autowired
+    CompleteSetsService completeSetsService;
+
     /**
      * Function searches car models for car brand.
      * @param id - Car brand id
@@ -28,6 +33,14 @@ public class RestFunctions {
     public String getCarModels(int id) {
         logger.debug("Rest get car models in action. brand id::" + id);
         List<CarModel> modelList = carModelService.findByBrandId(id);
+        Gson json = new Gson();
+        return json.toJson(modelList);
+    }
+
+    @GetMapping(value = "/RestGetCompleteSetsByCarModel")
+    public String getCompleteSets(int id){
+        logger.debug("Rest get complete sets in action. model id::" + id);
+        List<CompleteSet> modelList = completeSetsService.findByModelId(id);
         Gson json = new Gson();
         return json.toJson(modelList);
     }

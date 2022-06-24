@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<!--Order-->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" th:text="#{new_order}"></div>
+                <div class="card-body">
+
+                    <!--/*@thymesVar id="orderDto" type="com.epam.tkach.carrent.util.dto.OrderDto"*/-->
+                    <form class="form-horizontal" method="POST" th:action="@{/orders/create}" th:object="${orderDto}">
+
+                        <input type="number" th:type="hidden" id="carId"    th:field="*{car}"/>
+                        <input type="number" th:type="hidden" id="clientId" th:field="*{client}"/>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" th:text="#{characteristic}"></th>
+                                <th scope="col" th:text="#{value}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td th:text="#{car_brand}"></td>
+                                <td th:text="*{car.getBrand().getCarBrandName()}"></td>
+                            </tr><!--Brand-->
+                            <tr>
+                                <th scope="row">2</th>
+                                <td th:text="#{car_model}"></td>
+                                <td th:text="*{car.getModel().getModelName()}"></td>
+                            </tr><!--Model-->
+                            <tr>
+                                <th scope="row">3</th>
+                                <td th:text="#{car_class}"></td>
+                                <td th:text="#{*{car.getModel().getCarClass()}}"></td>
+                            </tr><!--Class-->
+                            <tr>
+                                <th scope="row">4</th>
+                                <td th:text="#{year}"></td>
+                                <td th:text="*{car.getGraduationYear()}"></td>
+                            </tr><!--Year-->
+                            <tr>
+                                <th scope="row">5</th>
+                                <td th:text="#{body_style}"></td>
+                                <td th:text="#{*{car.getCompleteSet().getBodyStyle()}}"></td>
+                            </tr><!--Body style-->
+                            <tr>
+                                <th scope="row">6</th>
+                                <td th:text="#{fuel_type}"></td>
+                                <td th:text="#{*{car.getCompleteSet().getFuelType()}}"></td>
+                            </tr><!--Fuel type-->
+                            <tr>
+                                <th scope="row">7</th>
+                                <td th:text="#{engine}"></td>
+                                <td th:text="*{car.getCompleteSet().getEngine()}"></td>
+                            </tr><!--Engine-->
+                            <tr>
+                                <th scope="row">9</th>
+                                <td th:text="#{state_number}"></td>
+                                <td th:text="*{car.getStateNumber()}"></td>
+                            </tr><!--State number-->
+                            <tr>
+                                <th scope="row">10</th>
+                                <td th:text="#{driver}"></td>
+                                <td><input class="form-check-input" type="checkbox" th:text="#{i_need_driver}" id="with_driver" th:field="*{withDriver}" onchange="getSum()"/></td>
+                            </tr><!--Engine-->
+                            <tr>
+                                <th scope="row">11</th>
+                                <td th:text="#{price_per_day}"></td>
+                                <td><p id="price_per_day" name="price_per_day" th:text="*{car.getTariff().getRentPrice()}"></p></td>
+                            </tr><!--Rent price-->
+                            <tr>
+                                <th scope="row">12</th>
+                                <td th:text="#{driver_price}"></td>
+                                <td><p id="driver_price" name="driver_price" th:text="*{car.getTariff().getDriverPrice()}"></p></td>
+                            </tr><!--Driver price-->
+                            <tr>
+                                <th scope="row">13</th>
+                                <td th:text="#{days_count}"></td>
+                                <td><input type="number" value="1" step="1" class="form-control" id="days_count" th:field="*{daysCount}" onchange="getSum()"></td>
+                            </tr><!--DAYS-->
+
+                            <tr>
+                                <th scope="row">14</th>
+                                <td th:text="#{sum}"></td>
+                                <td><input type="number" class="form-control" id="sum" name = "sum" th:field="*{amount}" readonly></td>
+                            </tr><!--SUM-->
+                            <tr>
+                                <th scope="row">15</th>
+                                <td th:text="#{document_info}"></td>
+                                <td><input type="text" th:field="*{documents}" class="form-control" id="document"></td>
+                            </tr><!--SUM-->
+                        </table>
+
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block login-button" th:text="#{create_order}">
+                                create order
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Car model and completeSet dropDown script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script type="text/javascript" th:src="@{/scripts/createOrderScripts.js}"></script>
+</body>
+</html>

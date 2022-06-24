@@ -31,13 +31,13 @@
 
                 <tr th:each="entity : ${entityList.page}">
                     <div sec:authorize="hasRole('ROLE_ADMIN')">
-                        <td><a th:href="@{car/edit/{id}(id=${entity.id})" th:text="${entity.id}"></a></td>
+                        <td><a th:href="@{/cars/edit/{id}(id=${entity.id})}" th:text="${entity.id}"></a></td>
                     </div>
                     <div sec:authorize="!hasRole('ROLE_ADMIN')">
-                        <td th:text="#{entity.id()}"></td>
+                        <td th:text="${entity.id}"></td>
                     </div>
                     <td th:text="${entity.isAvailable()}"></td>
-                    <td th:text="#{${entity.getCarClass()}}"></td>
+                    <td th:text="#{${entity.getModel().getCarClass()}}"></td>
                     <td th:text="${entity.getBrand().getCarBrandName()}"></td>
                     <td th:text="${entity.getModel().getModelName()}"></td>
                     <td th:text="${entity.getGraduationYear()}"></td>
@@ -51,7 +51,31 @@
                 </tr>
             </table>
         </div>
+        <!--Pagination-->
+        <nav aria-label="Page navigation" class="paging">
+            <ul class="pagination" th:if="${entityList.page.totalPages > 1}">
+                <li class="page-item" th:classappend="${!entityList.paging.isPrevEnabled()? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'/cars/list?pageNumber=' + ${entityList.paging.pageNumber - 1}}"
+                       tabindex="-1" th:text="#{pagination.previous}">Previous</a>
+                </li>
+                <th:block th:each="item : ${entityList.paging.getItems()}">
+                    <li class="page-item" th:classappend="${item.index == entityList.paging.pageNumber? 'active' : ''}"
+                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                        <a class="page-link" th:href="@{'/cars/list?pageNumber=' + ${item.index}}"
+                           th:text="${item.index}"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${!entityList.paging.isNextEnabled()? 'disabled' : ''}">
+                    <a class="page-link"
+                       th:href="@{'/cars/list?pageNumber=' + ${entityList.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </main>
 </form>
+<a class="btn btn-primary" id = "add-new" th:href="@{add}" role="button" th:text="#{add_new_car}">Add new car</a>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package com.epam.tkach.carrent.controller;
 
 import com.epam.tkach.carrent.Pages;
-import com.epam.tkach.carrent.entity.CarBrand;
 import com.epam.tkach.carrent.service.CarBrandService;
 import com.epam.tkach.carrent.util.dto.CarBrandDto;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +33,7 @@ public class CarBrandController {
         return Pages.CAR_BRANDS;
     }
 
-    @PostMapping(value = Pages.NEW_CAR_BRAND)
+    @PostMapping("carBrands/newCarBrand")
     public String addCarBrand(@ModelAttribute @Valid CarBrandDto carBrandDto,
                               BindingResult bindingResult,
                               Model model){
@@ -46,10 +45,10 @@ public class CarBrandController {
         logger.debug(carBrandDto.toString());
         carBrandService.save(carBrandDto);
 
-        return "redirect:/" + Pages.CAR_BRANDS;
+        return "redirect:/carBrands/list";
     }
 
-    @GetMapping(value = "addNewBrand")
+    @GetMapping(value = "carBrands/addNewBrand")
     public String addNewBrand(Model model){
         model.addAttribute("carBrandDto", new CarBrandDto());
         return Pages.NEW_CAR_BRAND;

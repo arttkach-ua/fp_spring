@@ -46,7 +46,7 @@ public class CompleteSetsController {
         model.addAttribute(PageParameters.ENTITY_LIST, completeSetsService.getPage(pageNumber, size));
         return Pages.COMPLETE_SETS;
     }
-    @GetMapping("newCompleteSet")
+    @GetMapping("completeSets/newCompleteSet")
     public String addNewCompleteSet(Model model){
         model.addAttribute(PageParameters.CAR_BRANDS, carBrandService.getAll());
         model.addAttribute(PageParameters.FUEL_TYPES_LIST, FuelTypes.values());
@@ -55,7 +55,8 @@ public class CompleteSetsController {
         model.addAttribute(PageParameters.COMPLETE_SET_DTO, new CompleteSetDto());
         return Pages.COMPLETESET_PAGE;
     }
-    @PostMapping("saveCompleteSet")
+
+    @PostMapping("completeSets/saveCompleteSet")
     public String saveCompleteSet(@ModelAttribute @Valid CompleteSetDto completeSetDto,
                                   BindingResult bindingResult,
                                   Model model){
@@ -74,7 +75,7 @@ public class CompleteSetsController {
             return Pages.COMPLETESET_PAGE;
         }
         completeSetsService.save(completeSetDto);
-        return "redirect:/" + Pages.COMPLETE_SETS;
+        return "redirect:/completeSets/list";
     }
 
     @GetMapping(value = "completeSet/edit/{id}")

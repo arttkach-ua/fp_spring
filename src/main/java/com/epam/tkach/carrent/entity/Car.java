@@ -1,9 +1,7 @@
 package com.epam.tkach.carrent.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.epam.tkach.carrent.util.dto.CarDto;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +13,7 @@ import java.util.StringJoiner;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "cars")
 public class Car{
     @Id
@@ -23,12 +22,10 @@ public class Car{
 
     @ManyToOne
     @JoinColumn(name="brand_id")
-    @NotNull(message = "error.nullCarBrand")
     private CarBrand brand;
 
     @ManyToOne
     @JoinColumn(name="model_id")
-    @NotNull(message = "error.nullCarModel")
     private CarModel model;
 
 //    @JoinColumn(name = "")
@@ -36,27 +33,20 @@ public class Car{
 //    private CarClass carClass;
 
     @Column(name="graduation_year")
-    @NotNull(message = "error.nullGraduationYear")
     private int graduationYear;
 
     @ManyToOne
     @JoinColumn(name = "complete_set_id")
-    @NotNull
     private CompleteSet completeSet;
 
     @Column(name = "state_number")
-    @NotNull(message = "error.nullStateNumber")
-    @Size(min = 2, message = "error.nullStateNumber")
     private String stateNumber;
 
     @Column(name="vin_code")
-    @NotNull(message = "error.nullVinNumber")
-    @Size(min = 2, message = "error.nullVinNumber")
     private String vinCode;
 
     @ManyToOne
     @JoinColumn(name="tariff_id")
-    @NotNull(message = "error.nullTariff")
     private Tariff tariff;
 
     @Column(name="available")
@@ -69,5 +59,33 @@ public class Car{
         joiner.add(stateNumber);
         return joiner.toString();
     }
+
+    public static Car getFromDTO(CarDto dto){
+        Car car = new Car();
+        car.setId(dto.getId());
+        car.setBrand(dto.getBrand());
+        car.setModel(dto.getModel());
+        car.setCompleteSet(dto.getCompleteSet());
+        car.setGraduationYear(dto.getYear());
+        car.setStateNumber(dto.getStateNumber());
+        car.setVinCode(dto.getVinCode());
+        car.setTariff(dto.getTariff());
+        car.setAvailable(true);
+        return car;
+    }
+
+    public static CarDto toDto(Car car){
+        CarDto dto = new CarDto();
+        dto.setId(car.getId());
+        dto.setBrand(car.getBrand());
+        dto.setModel(car.getModel());
+        dto.setYear(car.getGraduationYear());
+        dto.setCompleteSet(car.getCompleteSet());
+        dto.setTariff(car.getTariff());
+        dto.setStateNumber(car.getStateNumber());
+        dto.setVinCode(car.getVinCode());
+        return dto;
+    }
+
 
 }

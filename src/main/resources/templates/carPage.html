@@ -6,5 +6,119 @@
 </head>
 <body>
 <div th:insert="navigation/navbarSelector.html">...</div>
+<!--New car form -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" th:text="#{edit_car}"></div>
+                <div class="card-body">
+
+                    <!--/*@thymesVar id="carDto" type="com.epam.tkach.carrent.util.dto.CarDto"*/-->
+                    <form class="form-horizontal" method="POST" th:action="@{/cars/save}" th:object="${carDto}">
+                        <!--ID-->
+                        <div class="form-group">
+                            <input type="number" th:type="hidden" name="id" id="id" th:field="*{id}"/>
+                        </div>
+                        <!--Car brand-->
+                        <div class="form-group">
+                            <label for="carBrand" class="control-label cols-sm-2" th:text="#{car_brand}">Car brand</label>
+                            <select  class="form-control" id="carBrand" th:field="*{brand}" th:errorclass="fieldError" onchange="setCarModels()">
+                                <option  selected value=-1 th:text="#{select_general_placeholder}">option</option>
+                                <option th:each="option : ${carBrands}" th:value="${option.getId()}" th:text="${option.getCarBrandName()}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('brand')}"
+                                 th:each="e : ${#fields.errors('brand')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+                        <!--Car model-->
+                        <div class="form-group">
+                            <label for="carModel" class="control-label cols-sm-2" th:text="#{car_model}">Car model</label>
+                            <select class="form-control" id="carModel" th:field="*{model}" th:errorclass="fieldError" onchange="setCompleteSets()">
+                                <option th:each="option : ${carModels}" th:value="${option.getId()}" th:text="${option.getModelName()}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('model')}"
+                                 th:each="e : ${#fields.errors('model')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+                        <!--Complete set-->
+                        <div class="form-group">
+                            <label for="completeSet" class="control-label cols-sm-2" th:text="#{completeSetName}">Complete set</label>
+
+                            <select class="form-control" id="completeSet" th:field="*{completeSet}" th:errorclass="fieldError">
+                                <option th:each="option : ${completeSets}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
+                            </select>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('completeSet')}"
+                                 th:each="e : ${#fields.errors('completeSet')}" th:text="#{${e}}" >
+                            </div>
+
+                        </div>
+                        <!--YEAR-->
+                        <div class="form-group">
+                            <label for="year" class="control-label cols-sm-2" th:text="#{year}">Year</label>
+                            <input type="text" class="form-control" name="year" id="year" th:field="*{year}" th:errorclass="fieldError"/>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('year')}"
+                                 th:each="e : ${#fields.errors('year')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <!--State number-->
+                        <div class="form-group">
+                            <label for="stateNumber" class="control-label cols-sm-2" th:text="#{state_number}"></label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="stateNumber" th:field="*{stateNumber}" th:errorclass="fieldError" th:placeholder="#{state_number.placeholder}" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Vin code-->
+                        <div class="form-group">
+                            <label for="vinCode" class="control-label cols-sm-2" th:text="#{vin_code}"></label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="vinCode" th:field="*{vinCode}" th:errorclass="fieldError" th:placeholder="#{vin_code.placeholder}" />
+                                </div>
+                            </div>
+                        </div>
+                        <!--Tariff-->
+                        <div class="form-group">
+                            <label for="tariff" class="control-label cols-sm-2" th:text="#{tariff_name}">Tariff</label>
+                            <select  class="form-control" id="tariff" th:field="*{tariff}" th:errorclass="fieldError">
+                                <option  selected value=-1 th:text="#{select_general_placeholder}">option</option>
+                                <option th:each="option : ${tariffList}" th:value="${option.getId()}" th:text="${option.getName()}"></option>
+<!--                                <option selected value=-1><fmt:message key="select_general_placeholder"/></option>-->
+<!--                                <c:forEach items="${tariffList}" var="tariff">-->
+<!--                                    <option value=${tariff.getID()}>${tariff.getName()}</option>-->
+<!--                                </c:forEach>-->
+                            </select>
+                        </div>
+                        <!--button add-->
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary btn-lg" th:text="#{save_changes}">
+                                save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Car model and completeSet dropDown script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script type="text/javascript" th:src="@{/scripts/carScripts.js}"></script>
+<!--DatePicker script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#year").datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose:true
+        });
+    })
+</script>
 </body>
 </html>

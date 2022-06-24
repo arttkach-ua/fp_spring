@@ -33,7 +33,7 @@
                         <td th:text="#{${entity.getTransmission()}}">...</td>
                         <td th:text="#{${entity.getFuelType()}}">...</td>
                         <td th:text="${entity.getEngine()}">...</td>
-                        <td><a th:href="@{completeSet/edit/{id}(id=${entity.id})}"th:text="#{edit}"/></td>
+                        <td><a th:href="@{/completeSet/edit/{id}(id=${entity.id})}"th:text="#{edit}"/></td>
                 </tr>
             </table>
         </div>
@@ -43,13 +43,13 @@
 <nav aria-label="Page navigation" class="paging">
     <ul class="pagination" th:if="${entityList.page.totalPages > 1}">
         <li class="page-item" th:classappend="${!entityList.paging.isPrevEnabled()? 'disabled' : ''}">
-            <a class="page-link" th:href="@{'/completeSets?pageNumber=' + ${entityList.paging.pageNumber - 1}}"
+            <a class="page-link" th:href="@{'/completeSets/list?pageNumber=' + ${entityList.paging.pageNumber - 1}}"
                tabindex="-1" th:text="#{pagination.previous}">Previous</a>
         </li>
         <th:block th:each="item : ${entityList.paging.getItems()}">
             <li class="page-item" th:classappend="${item.index == entityList.paging.pageNumber? 'active' : ''}"
                 th:if="${item.pageItemType.name() == 'PAGE'}">
-                <a class="page-link" th:href="@{'/completeSets?pageNumber=' + ${item.index}}"
+                <a class="page-link" th:href="@{'/completeSets/list?pageNumber=' + ${item.index}}"
                    th:text="${item.index}"></a>
             </li>
             <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
@@ -58,7 +58,7 @@
         </th:block>
         <li class="page-item" th:classappend="${!entityList.paging.isNextEnabled()? 'disabled' : ''}">
             <a class="page-link"
-               th:href="@{'/completeSets?pageNumber=' + ${entityList.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
+               th:href="@{'/completeSets/list?pageNumber=' + ${entityList.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
         </li>
     </ul>
 </nav>

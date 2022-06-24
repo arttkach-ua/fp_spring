@@ -2,6 +2,7 @@ package com.epam.tkach.carrent.config;
 //
 
 import com.epam.tkach.carrent.entity.User;
+import com.epam.tkach.carrent.handlers.CustomSuccessHandler;
 import com.epam.tkach.carrent.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+    @Autowired private CustomSuccessHandler loginSuccessHandler;
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -34,7 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             Optional<User> user = userService.findByEmail(email);
             if (user.isPresent()) {
                 System.out.println(user.get().toString());
+                System.out.println(user.get());
                 return user.get();
+
             } else {
                 throw new UsernameNotFoundException("No user fount with email:::" + email);
             }
@@ -49,26 +54,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 //Доступ только для не зарегистрированных пользователей
                 .antMatchers("/registration").not().fullyAuthenticated()
+                //Доступ клиента
+                .antMatchers("/users/topUp").hasRole("CLIENT")
+                .antMatchers("/users/myProfile", "/users/save").hasAnyRole("ADMIN","CLIENT", "MANAGER")
                 //Доступ только для пользователей с ролью Администратор
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/carModels/**").hasRole("ADMIN")
                 .antMatchers("/tariff/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("ADMIN")
-                .antMatchers("/news").hasRole("CLIENT")
+                .antMatchers("/users/**").hasRole("ADMIN")
+
+
                 //Доступ разрешен всем пользователей
-                .antMatchers("/", "/resources/**").permitAll()
+                .antMatchers("/", "/resources/**","/static/**").permitAll()
                 //Все остальные страницы требуют аутентификации
                 .anyRequest().authenticated()
                 .and()
                 //Настройка для входа в систему
+
                 .formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/login")
                     .usernameParameter("email")
-                    .defaultSuccessUrl("/", true)
+                    .successHandler(loginSuccessHandler)
+                    //.defaultSuccessUrl("/", true)
                 .permitAll()
+
                 //Перенарпавление на главную страницу после успешного входа
-                //.defaultSuccessUrl("/")
+                //.defaultSuccessUrl("/index")
                 .permitAll()
                 .and()
                 .logout()
@@ -87,20 +99,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .permitAll();
     }
 
-    //    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("1")
-//                        .roles("ADMIN")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(bCryptPasswordEncoder());
+        auth
+                .userDetailsService(userDetailsService())
+                .passwordEncoder(bCryptPasswordEncoder());
     }
 }

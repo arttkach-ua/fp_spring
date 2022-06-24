@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<!--FILTERS-->
+<p>
+    <a class="btn btn-primary" th:text="#{filters_and_sorting}" data-toggle="collapse" href="#filtersCollapse" role="button" aria-expanded="false" aria-controls="filtersCollapse">
+        filters and sorting
+    </a>
+</p>
+<div class="collapse" id="filtersCollapse">
+    <div class="container-fluid">
+        <form class="form-horizontal" th:action="@{/orders/selectCar}" method="get">
+            <div class="row">
+                <!--Car class filter-->
+                <div class="form-group">
+                    <label for="car_class_filter" class="control-label" th:text="#{car_class}">Car class</label>
+                    <select class="form-control" id="car_class_filter" name="car_class_filter">
+                        <option  selected value="" th:text="#{select_general_placeholder}">option</option>
+
+                        <option th:each="option : ${carClasses}" th:value="${option}" th:text="#{${option}}"
+                                th:selected="${option == car_class_filter}"></option>
+                    </select>
+                </div>
+                <!--car brand filter-->
+                <div class="form-group">
+                    <label for="car_brand_filter" class="control-label" th:text="#{car_brand}">car brand</label>
+                    <select class="form-control" id="car_brand_filter" name="car_brand_filter">
+                        <option selected value="-1" th:text="#{select_general_placeholder}">option</option>
+                        <option th:each="option : ${carBrands}" th:value="${option.getId()}" th:text="${option.getCarBrandName()}"
+                                th:selected="${option.getId() == car_brand_filter}"></option>
+                    </select>
+                </div>
+                <!--TransMission filter-->
+
+                <div class="form-group">
+                    <label for="transmission_filter" class="control-label" th:text="transmission">transmission</label>
+                    <select class="form-control" id="transmission_filter" name="transmission_filter">
+                        <option selected value="" th:text="#{select_general_placeholder}">option</option>
+                        <option th:each="option : ${transmissionList}" th:value="${option}" th:text="#{${option}}"
+                                th:selected="${option == transmission_filter}"></option>
+                    </select>
+                </div>
+            </div><!--Filters-->
+            <div class="row"><!--Sorting-->
+                <div class="form-group">
+                    <label for="sort_field" class="control-label" th:text="#{sort_by}">Sort by</label>
+                    <select class="form-control" id="sort_field" name="sort_field">
+                        <option selected value="" th:text="#{select_general_placeholder}">option</option>
+                        <option th:each="option : ${sortList}" th:value="${option}" th:text="#{${option}}"
+                                th:selected="${option == sort_field}"></option>
+                    </select>
+                </div>
+            </div><!--Sorting-->
+            <button type="submit" class="btn btn-primary" th:text="#{button.filter}">
+                filter
+            </button>
+        </form>
+    </div>
+</div>
+<!--Car list form-->
+<form th:action="@{/orders/selectCar}" method="get">
+    <main class="m-3">
+        <div class="row col-md-6">
+            <table class="table table-striped table-bordered table-sm">
+                <caption style="caption-side: top" th:text="#{navbar.company_cars}"></caption>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" th:text="#{car_class}"></th>
+                    <th scope="col" th:text="#{car_brand}"></th>
+                    <th scope="col" th:text="#{car_model}"></th>
+                    <th scope="col" th:text="#{year}"></th>
+                    <th scope="col" th:text="#{engine}"></th>
+                    <th scope="col" th:text="#{transmission}"></th>
+                    <th scope="col" th:text="#{fuel_type}"></th>
+                    <th scope="col" th:text="#{vin_code}"></th>
+                    <th scope="col" th:text="#{state_number}"></th>
+                    <th scope="col" th:text="#{price_per_day}"></th>
+                    <th scope="col" th:text="#{driver_price}"></th>
+                    <th scope="col"></th>
+                </tr>
+
+                    <tr th:each="entity : ${entityList.page}">
+                        <td th:text="${entity.getId()}"></td>
+                        <td th:text="#{${entity.getModel().getCarClass()}}"></td>
+                        <td th:text="${entity.getBrand().getCarBrandName()}"></td>
+                        <td th:text="${entity.getModel().getModelName()}"></td>
+                        <td th:text="${entity.getGraduationYear()}"></td>
+                        <td th:text="${entity.getCompleteSet().getEngine()}"></td>
+                        <td th:text="#{${entity.getCompleteSet().getTransmission()}}"></td>
+                        <td th:text="#{${entity.getCompleteSet().getFuelType()}}"></td>
+                        <td th:text="${entity.getVinCode()}"></td>
+                        <td th:text="${entity.getStateNumber()}"></td>
+                        <td th:text="${entity.getTariff().getRentPrice()}"></td>
+                        <td th:text="${entity.getTariff().getDriverPrice()}"></td>
+                        <!--<td><a th:href="@{/tariff/edit/{id}(id=${entity.id})}" th:text="#{edit}"/></td>-->
+                        <td><a class="btn btn-outline-warning" th:href="@{/orders/create/{id}(id=${entity.getId()})}" th:text="#{button.order_car}" role="button"></a></td>
+                    </tr>
+            </table>
+        </div>
+        <!--Pagination-->
+        <nav aria-label="Page navigation" class="paging">
+            <ul class="pagination" th:if="${entityList.page.totalPages > 1}">
+                <li class="page-item" th:classappend="${!entityList.paging.isPrevEnabled()? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'/orders/selectCar?pageNumber=' + ${entityList.paging.pageNumber - 1} +'&car_class_filter=' + ${car_class_filter} + '&car_brand_filter='+${car_brand_filter} + '&transmission_filter=' + ${transmission_filter} + '&sort_field=' + ${sort_field}}"
+                       tabindex="-1" th:text="#{pagination.previous}">Previous</a>
+                </li>
+                <th:block th:each="item : ${entityList.paging.getItems()}">
+                    <li class="page-item" th:classappend="${item.index == entityList.paging.pageNumber? 'active' : ''}"
+                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                        <a class="page-link" th:href="@{'/orders/selectCar?pageNumber=' + ${item.index} + '&car_class_filter=' + ${car_class_filter} + '&car_brand_filter='+${car_brand_filter} + '&transmission_filter=' + ${transmission_filter} + '&sort_field=' + ${sort_field}}"
+                           th:text="${item.index}"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${!entityList.paging.isNextEnabled()? 'disabled' : ''}">
+                    <a class="page-link"
+                       th:href="@{'/orders/selectCar?pageNumber=' + ${entityList.paging.pageNumber + 1} + '&car_class_filter=' + ${car_class_filter} + '&car_brand_filter='+${car_brand_filter} + '&transmission_filter=' + ${transmission_filter} + '&sort_field=' + ${sort_field}}" th:text="#{pagination.next}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </main>
+</form>
+</body>
+</html>

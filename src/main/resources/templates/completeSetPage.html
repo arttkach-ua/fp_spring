@@ -18,7 +18,7 @@
                 <div class="card-header" th:text="#{new_complete_set}">Edit complete set</div>
                 <div class="card-body">
 
-                    <form class="form-horizontal" method="POST" th:action="@{/saveCompleteSet}" th:object="${completeSetDto}">
+                    <form class="form-horizontal" method="POST" th:action="@{/completeSets/saveCompleteSet}" th:object="${completeSetDto}">
                         <!--ID-->
                         <div class="form-group">
                             <input type="number" th:type="hidden" name="id" id="id" th:field="*{id}"/>
@@ -109,6 +109,7 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
 <script type="text/javascript">
     function setCarModels() {
         console.log("AAA");
@@ -121,7 +122,7 @@
              id: brand_id
          };
          $.ajax({
-             url: "RestGetCarModels",
+             url: "/rentSpring/RestGetCarModels",
              method: "GET",
              data: data,
             success: function (data, textStatus, jqXHR) {

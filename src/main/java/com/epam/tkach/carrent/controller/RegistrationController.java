@@ -1,5 +1,10 @@
 package com.epam.tkach.carrent.controller;
 
+import com.epam.tkach.carrent.PageParameters;
+import com.epam.tkach.carrent.Pages;
+import com.epam.tkach.carrent.entity.User;
+import com.epam.tkach.carrent.entity.enums.Role;
+import com.epam.tkach.carrent.exceptions.NoSuchUserException;
 import com.epam.tkach.carrent.service.UserService;
 import com.epam.tkach.carrent.util.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
@@ -17,15 +22,23 @@ import java.util.List;
 
 @Controller
 public class RegistrationController {
+    private static final Logger logger = LogManager.getLogger(RegistrationController.class);
+
     @Autowired
     private UserService userService;
 
-    private static final Logger logger = LogManager.getLogger(RegistrationController.class);
     @GetMapping("registration")
     public String registrationGet(Model model) {
-        System.out.println("aaaa");
-        logger.debug("ffff");
-        return "register";
+        try {
+            User currentUser = userService.getCurrentUser();
+            if (currentUser.getRole()== Role.ADMIN){
+                model.addAttribute(PageParameters.ROLES_LIST,Role.values());
+            }
+            return "register";
+        } catch (NoSuchUserException e) {
+            logger.error(e);
+            return Pages.ERROR;
+        }
     }
 
     @PostMapping("registration")
@@ -44,7 +57,6 @@ public class RegistrationController {
             }
 
         }
-        System.out.println("post mapping");
         userService.createNewUser(userDto);
         System.out.println(userDto.toString());
         logger.debug(userDto.toString());

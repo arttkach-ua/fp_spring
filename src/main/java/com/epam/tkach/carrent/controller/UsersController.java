@@ -2,14 +2,19 @@ package com.epam.tkach.carrent.controller;
 
 import com.epam.tkach.carrent.PageParameters;
 import com.epam.tkach.carrent.Pages;
+import com.epam.tkach.carrent.entity.Transaction;
 import com.epam.tkach.carrent.entity.User;
+import com.epam.tkach.carrent.entity.enums.CarClass;
 import com.epam.tkach.carrent.exceptions.NoSuchUserException;
+import com.epam.tkach.carrent.service.TransactionService;
 import com.epam.tkach.carrent.service.UserService;
+import com.epam.tkach.carrent.util.dto.TransactionDto;
 import com.epam.tkach.carrent.util.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -25,6 +31,9 @@ public class UsersController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TransactionService transactionService;
 
     @GetMapping("/users/list")
     public String showUsers(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
@@ -74,11 +83,41 @@ public class UsersController {
 
         try {
             userService.updateUser(userDto);
-            return "redirect:/users/list";
+            return "redirect:/";
         } catch (NoSuchUserException e) {
             logger.error(e);
             return Pages.ERROR;
         }
     }
+
+    @GetMapping("/users/topUp")
+    public String openTopUpPage(Model model){
+        model.addAttribute("transactionDto", new TransactionDto());
+        return Pages.TOP_UP;
+    }
+    @PostMapping("/users/topUp")
+    public String topUp(HttpSession session,
+                        @Valid TransactionDto transactionDto,
+                        BindingResult bindingResult,
+                        Model model){
+        //Validation
+        if (bindingResult.hasErrors()) {
+            model.addAttribute(PageParameters.TRANSACTION_DTO, transactionDto);
+            return Pages.TOP_UP;
+        }
+        //Creating transaction
+
+        try {
+            transactionDto.setUser(userService.getCurrentUser());
+            transactionService.topUp(transactionDto);
+            //Setting new balance to session
+            session.setAttribute("balance", transactionService.getUserBalance(transactionDto.getUser().getEmail()));
+            return "redirect:/";
+        } catch (NoSuchUserException e) {
+            logger.error(e);
+            return "redirect:/error";
+        }
+    }
+
 
 }

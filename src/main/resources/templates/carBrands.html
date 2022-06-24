@@ -28,13 +28,13 @@
         <nav aria-label="Page navigation" class="paging">
             <ul class="pagination" th:if="${carBrands.page.totalPages > 1}">
                 <li class="page-item" th:classappend="${!carBrands.paging.isPrevEnabled()? 'disabled' : ''}">
-                    <a class="page-link" th:href="@{'/carBrands?pageNumber=' + ${carBrands.paging.pageNumber - 1}}"
+                    <a class="page-link" th:href="@{'/carBrands/list?pageNumber=' + ${carBrands.paging.pageNumber - 1}}"
                        tabindex="-1" th:text="#{pagination.previous}">Previous</a>
                 </li>
                 <th:block th:each="item : ${carBrands.paging.getItems()}">
                     <li class="page-item" th:classappend="${item.index == carBrands.paging.pageNumber? 'active' : ''}"
                         th:if="${item.pageItemType.name() == 'PAGE'}">
-                        <a class="page-link" th:href="@{'/carBrands?pageNumber=' + ${item.index}}"
+                        <a class="page-link" th:href="@{'/carBrands/list?pageNumber=' + ${item.index}}"
                            th:text="${item.index}"></a>
                     </li>
                     <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
@@ -43,7 +43,7 @@
                 </th:block>
                 <li class="page-item" th:classappend="${!carBrands.paging.isNextEnabled()? 'disabled' : ''}">
                     <a class="page-link"
-                       th:href="@{'/carBrands?pageNumber=' + ${carBrands.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
+                       th:href="@{'/carBrands/list?pageNumber=' + ${carBrands.paging.pageNumber + 1}}" th:text="#{pagination.next}">Next</a>
                 </li>
             </ul>
         </nav>

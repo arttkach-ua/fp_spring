@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -51,4 +52,9 @@ public class Invoice{
 
     @Column(name="timestamp")
     private Date dateTime;
+
+    public String getFormattedDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy h:mm a");
+        return sdf.format(dateTime);
+    }
 }
