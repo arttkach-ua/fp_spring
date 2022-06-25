@@ -3,6 +3,7 @@ package com.epam.tkach.carrent.service;
 import com.epam.tkach.carrent.controller.CarBrandController;
 import com.epam.tkach.carrent.entity.User;
 import com.epam.tkach.carrent.exceptions.NoSuchUserException;
+import com.epam.tkach.carrent.exceptions.UserExistsException;
 import com.epam.tkach.carrent.repos.UserRepository;
 import com.epam.tkach.carrent.util.dto.UserDto;
 import com.epam.tkach.carrent.util.pagination.Paged;
@@ -38,18 +39,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean createNewUser(UserDto user) {
+    public void createNewUser(UserDto user) throws UserExistsException {
 
         if (userRepository.count()==0){
             user.setRole("ADMIN");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            System.out.println("EXISTS");
-            return false;
+            throw new UserExistsException("User with email:" + user.getEmail() + " already exists");
         };
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(User.getFromDTO(user));
-        return true;
     }
 
     /**

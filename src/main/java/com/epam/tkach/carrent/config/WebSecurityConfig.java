@@ -1,5 +1,4 @@
 package com.epam.tkach.carrent.config;
-//
 
 import com.epam.tkach.carrent.entity.User;
 import com.epam.tkach.carrent.handlers.CustomSuccessHandler;
@@ -59,7 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users/myProfile", "/users/save").hasAnyRole("ADMIN","CLIENT", "MANAGER")
                 //Доступ только для пользователей с ролью Администратор
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/carModels/list").hasAnyRole("ADMIN","MANAGER")
                 .antMatchers("/carModels/**").hasRole("ADMIN")
+                .antMatchers("/tariff/list").hasAnyRole("ADMIN","MANAGER")
                 .antMatchers("/tariff/**").hasRole("ADMIN")
                 .antMatchers("/users/**").hasRole("ADMIN")
 

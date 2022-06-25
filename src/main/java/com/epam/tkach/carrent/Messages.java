@@ -27,6 +27,7 @@ public class Messages {
     public static final String ERROR_AMOUNT = "error.empty_amount";
     public static final String ACCESS_DENIED = "error.access_denied";
     public static final String LOGIN_SUCCESS = "success.login_success";
+    public static final String PASS_NOT_MATCH = "error.passDoNotMatch";
 
 }
 

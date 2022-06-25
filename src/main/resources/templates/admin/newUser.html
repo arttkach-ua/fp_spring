@@ -14,14 +14,17 @@
                 <div class="card">
                     <div class="card-header" th:text="#{register}">Register</div>
                     <div class="card-body">
-                        <form class="form-with-validation" name="my-form" th:object="${userDto}" th:action="@{/registration}" method="post"
+                        <!--/*@thymesVar id="userDto" type="com.epam.tkach.carrent.util.dto.UserDto"*/-->
+                        <form class="form-with-validation" name="my-form" th:object="${userDto}" th:action="@{/users/add}" method="post"
                               onsubmit="return Valid()">
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right" th:text="#{email}">e-mail</label>
                                 <div class="col-md-6">
-                                    <input type="text" id="email" class="form-control" name="email"
-                                           th:placeholder="#{email.placeholder}"/>
+                                    <input type="text" id="email" class="form-control" th:field="*{email}" th:placeholder="#{email.placeholder}"/>
                                     <div class="status" id="status"></div>
+                                    <div class="alert alert-danger" th:if="${#fields.hasErrors('email')}"
+                                         th:each="e : ${#fields.errors('email')}" th:text="#{${e}}" >
+                                    </div>
                                 </div>
                             </div>
 
@@ -29,8 +32,11 @@
                                 <label for="firstName" class="col-md-4 col-form-label text-md-right"
                                        th:text="#{first_name}">First name</label>
                                 <div class="col-md-6">
-                                    <input type="text" id="firstName" class="form-control" name="firstName"
+                                    <input type="text" id="firstName" class="form-control" th:field="*{firstName}"
                                            th:placeholder="#{first_name.placeholder}"/>
+                                </div>
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}"
+                                     th:each="e : ${#fields.errors('firstName')}" th:text="#{${e}}" >
                                 </div>
                             </div>
 
@@ -38,8 +44,11 @@
                                 <label for="secondName" class="col-md-4 col-form-label text-md-right"
                                        th:text="#{second_name}">Second name</label>
                                 <div class="col-md-6">
-                                    <input type="text" id="secondName" class="form-control" name="secondName"
+                                    <input type="text" id="secondName" class="form-control" th:field="*{secondName}"
                                            th:placeholder="#{second_name.placeholder}"/>
+                                </div>
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('secondName')}"
+                                     th:each="e : ${#fields.errors('secondName')}" th:text="#{${e}}" >
                                 </div>
                             </div>
 
@@ -47,8 +56,11 @@
                                 <label for="phoneNumber" class="col-md-4 col-form-label text-md-right"
                                        th:text="#{phone_number}">Phone number</label>
                                 <div class="col-md-6">
-                                    <input type="tel" id="phoneNumber" class="form-control" name="phoneNumber"
+                                    <input type="tel" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"
                                            th:placeholder="#{phone_number.placeholder}"/>
+                                </div>
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+                                     th:each="e : ${#fields.errors('phoneNumber')}" th:text="#{${e}}" >
                                 </div>
                             </div>
 
@@ -56,17 +68,24 @@
                                 <label for="docementInfo" class="col-md-4 col-form-label text-md-right"
                                        th:text="#{document_info}">Document</label>
                                 <div class="col-md-6">
-                                    <input type="text" id="docementInfo" class="form-control" name="documentInfo"
+                                    <input type="text" id="docementInfo" class="form-control" th:field="*{documentInfo}"
                                            th:placeholder="#{document_info.placeholder}"/>
+                                </div>
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('documentInfo')}"
+                                     th:each="e : ${#fields.errors('documentInfo')}" th:text="#{${e}}" >
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="password" class="col-md-4 col-form-label text-md-right" th:text="#{pass}">Pass</label>
                                 <div class="col-md-6">
-                                    <input type="password" id="password" class="form-control" name="password"
+                                    <input type="password" id="password" class="form-control" th:field="*{password}"
                                            th:placeholder="#{pass.placeholder}"/>
+                                    <div class="alert alert-danger" th:if="${#fields.hasErrors('password')}"
+                                         th:each="e : ${#fields.errors('password')}" th:text="#{${e}}" >
+                                    </div>
                                 </div>
+
                             </div>
 
                             <div class="form-group row">
@@ -74,18 +93,28 @@
                                        th:text="#{pass_confirm}">pass confirm</label>
                                 <div class="col-md-6">
                                     <input type="password" id="confirmPassword" class="form-control"
-                                           name="confirmPassword"
-                                           th:placeholder="#{pass_confirm.placeholder}"/>
+                                           th:field="*{confirmPassword}" th:placeholder="#{pass_confirm.placeholder}"/>
                                     <span id="confirmMessagePass" class="confirmMessage"></span>
                                 </div>
 
+                            </div>
+
+                            <div sec:authorize="hasRole('ROLE_ADMIN')" class="form-group row">
+                                <label for="role" class="col-md-4 col-form-label text-md-right"
+                                       th:text="#{role}"></label>
+                                <div class="col-md-6">
+                                    <select class="form-control" id="role" th:field="*{role}">
+                                        <option th:each="option : ${rolesList}" th:value="${option}"
+                                                th:text="#{${option}}"></option>
+                                    </select>
+                                </div>
                             </div>
 
                             <div class="form-group row">
                                 <div class="form-check form-check-inline col-md-4">
                                     <input class="form-check-input" type="checkbox" id="receiveNotifications"
                                            value="receiveNotifications" name="receiveNotifications"
-                                           th:path="receiveNotifications">
+                                           th:path="receiveNotifications" th:field="*{receiveNotifications}">
                                     <label class="form-check-label" for="receiveNotifications"
                                            th:text="#{receive_notifications}">Recive notifications</label>
                                 </div>

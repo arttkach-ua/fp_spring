@@ -1,10 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="./">
+                <img th:src="@{/img/logo.png}" src="" width="40" height="40" class="d-inline-block align-top" alt=""
+                     th:text="#{title}">
+            </a>
 
-</body>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCars" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           th:text="#{navbar.cars}">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" th:href="@{/carBrands/list}" th:text="#{navbar.brands}"></a>
+                            <a class="dropdown-item" th:href="@{/carModels/list}" th:text="#{navbar.models}"></a>
+                            <a class="dropdown-item" th:href="@{/completeSets/list}"
+                               th:text="#{navbar.completeSets}"></a>
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" th:href="@{/cars/list}" th:text="#{navbar.company_cars}">4</a>
+                        </div>
+                    </li>
+                    <!--DOCUMENTS-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownDocuments" role="button"
+                           data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false" th:text="#{navbar.documents}">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" th:href="@{/orders/list}" th:text="#{navbar.orders}"></a>
+                            <a class="dropdown-item" th:href="@{/invoices/list}" th:text="#{navbar.invoices}"></a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tariff/list}" th:text="#{navbar.tariffs}">tariffs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/users/myProfile}" th:text="#{navbar.my_profile}">my
+                            profile
+                        </a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="material-icons">
+                            language
+                        </i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <form class="form-inline" method="post" action="controller?action=i18n">
+                            <button type="submit" name="ua" class="dropdown-item">Ukrainian</button>
+                            <button type="submit" name="en" class="dropdown-item">English</button>
+                        </form>
+                    </div>
+                </div>
+                <form class="form-inline my-2 my-lg-0" method="post" th:action="@{/logout}">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" th:text="#{navbar.logout}">
+                        log out
+                    </button>
+                </form>
+            </div>
+        </nav>
+    </body>
 </html>

@@ -5,6 +5,7 @@ import com.epam.tkach.carrent.Pages;
 import com.epam.tkach.carrent.entity.User;
 import com.epam.tkach.carrent.entity.enums.Role;
 import com.epam.tkach.carrent.exceptions.NoSuchUserException;
+import com.epam.tkach.carrent.exceptions.UserExistsException;
 import com.epam.tkach.carrent.service.UserService;
 import com.epam.tkach.carrent.util.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -27,39 +29,35 @@ public class RegistrationController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("registration")
+    @GetMapping("/registration")
     public String registrationGet(Model model) {
-        try {
-            User currentUser = userService.getCurrentUser();
-            if (currentUser.getRole()== Role.ADMIN){
-                model.addAttribute(PageParameters.ROLES_LIST,Role.values());
-            }
+//        try {
+//            User currentUser = userService.getCurrentUser();
+//            if (currentUser.getRole()== Role.ADMIN){
+//                model.addAttribute(PageParameters.ROLES_LIST,Role.values());
+//            }
             return "register";
-        } catch (NoSuchUserException e) {
-            logger.error(e);
-            return Pages.ERROR;
-        }
+//        } catch (NoSuchUserException e) {
+//            logger.error(e);
+//            return Pages.ERROR;
+//        }
     }
 
     @PostMapping("registration")
     public String registrationPost(@Valid UserDto userDto, BindingResult bindingResult, Model model){
-        System.out.println("post mapping1");
         if (bindingResult.hasErrors()){
-//            bindingResult
-//                    .getFieldErrors()
-//                    .stream()
-//                    .collect(Collectors.toMap(
-//                            fieldError -> fieldError+"Error",
-//                            FieldError::getDefaultMessage));
-            List<FieldError> errors = bindingResult.getFieldErrors();
-            for (FieldError error:errors) {
-                System.out.println(error.getField() + error.getDefaultMessage());
-            }
-
+            model.addAttribute(PageParameters.USER_DTO, userDto);
+            return "register";
         }
-        userService.createNewUser(userDto);
-        System.out.println(userDto.toString());
-        logger.debug(userDto.toString());
-        return "login";
+        try {
+            userService.createNewUser(userDto);
+            logger.debug(userDto.toString());
+            return "login";
+        } catch (UserExistsException e) {
+            logger.error(e);
+            ObjectError error = new ObjectError("email","An account already exists for this email.");
+            bindingResult.addError(error);
+            return "register";
+        }
     }
 }
