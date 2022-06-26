@@ -36,7 +36,7 @@
                     <div sec:authorize="!hasRole('ROLE_ADMIN')">
                         <td th:text="${entity.id}"></td>
                     </div>
-                    <td th:text="${entity.isAvailable()}"></td>
+                    <td th:text="#{${entity.isAvailable()}}"></td>
                     <td th:text="#{${entity.getModel().getCarClass()}}"></td>
                     <td th:text="${entity.getBrand().getCarBrandName()}"></td>
                     <td th:text="${entity.getModel().getModelName()}"></td>
@@ -76,6 +76,6 @@
         </nav>
     </main>
 </form>
-<a class="btn btn-primary" id = "add-new" th:href="@{add}" role="button" th:text="#{add_new_car}">Add new car</a>
+<a class="btn btn-primary" sec:authorize="hasRole('ROLE_ADMIN')" id = "add-new" th:href="@{add}" role="button" th:text="#{add_new_car}">Add new car</a>
 </body>
 </html>

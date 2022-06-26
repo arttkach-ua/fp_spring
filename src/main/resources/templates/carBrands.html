@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:insert="fragments/head.html">...</div>
 </head>
@@ -50,7 +51,7 @@
     </div>
 </main>
 
-<a class="btn btn-primary" id="add-new-model" href="addNewBrand" role="button" th:text="#{add_new_car_brand}">add new
+<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary" id="add-new-model" href="addNewBrand" role="button" th:text="#{add_new_car_brand}">add new
     car brand</a>
 </body>
 </html>

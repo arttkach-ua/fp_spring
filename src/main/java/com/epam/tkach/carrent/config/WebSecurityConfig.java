@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
                 //Доступ разрешен всем пользователей
-                .antMatchers("/", "/resources/**","/static/**").permitAll()
+                .antMatchers("/", "/international","/resources/**","/static/**").permitAll()
                 //Все остальные страницы требуют аутентификации
                 .anyRequest().authenticated()
                 .and()

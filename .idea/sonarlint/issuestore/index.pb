@@ -109,8 +109,6 @@ w
 Gsrc/main/java/com/epam/tkach/carrent/controller/rest/RestFunctions.java,6\f\6fa1d78b4463036bee37d6fd7a304ddff9bb2346
 x
 Hsrc/main/java/com/epam/tkach/carrent/exceptions/UserExistsException.java,d\a\da62111d143d49ca60011169b824d6790587641e
-r
-Bsrc/main/java/com/epam/tkach/carrent/config/WebSecurityConfig.java,7\2\72b65ac06f4903286be8c8781999e27a8cfeaa71
 m
 =src/main/java/com/epam/tkach/carrent/service/UserService.java,a\3\a3b76f79b4102e5a0c02e96804e6aa0d73e0a6da
 w
