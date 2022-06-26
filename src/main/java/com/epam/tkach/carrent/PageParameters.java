@@ -21,4 +21,9 @@ public class PageParameters {
     public static final String CAR_DTO = "carDto";
     public static final String TRANSACTION_DTO = "transactionDto";
     public static final String ORDER_DTO = "orderDto";
+
+    //etc
+    public static final String PAID_LIST = "paidList";
+    public static final String SORT_LIST = "sortList";
+    public static final String ERROR_MESSAGE = "errorMessage";
 }

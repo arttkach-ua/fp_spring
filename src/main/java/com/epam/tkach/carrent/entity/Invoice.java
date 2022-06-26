@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Positive;
 
 @Setter
@@ -54,6 +55,7 @@ public class Invoice{
     private Date dateTime;
 
     public String getFormattedDate(){
+        if (dateTime== null) return "";
         SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy h:mm a");
         return sdf.format(dateTime);
     }

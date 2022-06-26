@@ -1,10 +1,6 @@
 package com.epam.tkach.carrent.controller;
 
 import com.epam.tkach.carrent.PageParameters;
-import com.epam.tkach.carrent.Pages;
-import com.epam.tkach.carrent.entity.User;
-import com.epam.tkach.carrent.entity.enums.Role;
-import com.epam.tkach.carrent.exceptions.NoSuchUserException;
 import com.epam.tkach.carrent.exceptions.UserExistsException;
 import com.epam.tkach.carrent.service.UserService;
 import com.epam.tkach.carrent.util.dto.UserDto;
@@ -14,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 public class RegistrationController {
@@ -31,16 +25,7 @@ public class RegistrationController {
 
     @GetMapping("/registration")
     public String registrationGet(Model model) {
-//        try {
-//            User currentUser = userService.getCurrentUser();
-//            if (currentUser.getRole()== Role.ADMIN){
-//                model.addAttribute(PageParameters.ROLES_LIST,Role.values());
-//            }
-            return "register";
-//        } catch (NoSuchUserException e) {
-//            logger.error(e);
-//            return Pages.ERROR;
-//        }
+        return "register";
     }
 
     @PostMapping("registration")

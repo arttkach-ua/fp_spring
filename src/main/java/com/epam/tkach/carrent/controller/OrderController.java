@@ -1,15 +1,19 @@
 package com.epam.tkach.carrent.controller;
 
+import com.epam.tkach.carrent.Messages;
 import com.epam.tkach.carrent.PageParameters;
 import com.epam.tkach.carrent.Pages;
 import com.epam.tkach.carrent.entity.CarBrand;
+import com.epam.tkach.carrent.entity.Order;
 import com.epam.tkach.carrent.entity.User;
 import com.epam.tkach.carrent.entity.enums.CarClass;
 import com.epam.tkach.carrent.entity.enums.OrderStatuses;
 import com.epam.tkach.carrent.entity.enums.Role;
 import com.epam.tkach.carrent.entity.enums.TransmissionTypes;
 import com.epam.tkach.carrent.exceptions.NoSuchCarException;
+import com.epam.tkach.carrent.exceptions.NoSuchOrderException;
 import com.epam.tkach.carrent.exceptions.NoSuchUserException;
+import com.epam.tkach.carrent.exceptions.OrderProcessingException;
 import com.epam.tkach.carrent.service.CarBrandService;
 import com.epam.tkach.carrent.service.CarService;
 import com.epam.tkach.carrent.service.OrderService;
@@ -18,6 +22,7 @@ import com.epam.tkach.carrent.util.dto.OrderDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -58,14 +64,14 @@ public class OrderController {
         model.addAttribute("carClasses", CarClass.values());
         model.addAttribute("carBrands", carBrandService.getAll());
         model.addAttribute("transmissionList", TransmissionTypes.values());
-        model.addAttribute("sortList", carService.getSortingList());
+        model.addAttribute(PageParameters.SORT_LIST, carService.getSortingList());
         //Setting filter fields
         model.addAttribute("car_class_filter", carClassFilter!=null ? carClassFilter : "");
         model.addAttribute("car_brand_filter", carBrandFilter!=null ? carBrandFilter.getId() : -1);
         model.addAttribute("transmission_filter", transmissionFilter!=null ? transmissionFilter : "");
         model.addAttribute("sort_field", sortField!=null ? sortField : "");
         model.addAttribute(PageParameters.ENTITY_LIST, carService.getCarsForNewOrder(pageNumber,size,carClassFilter,carBrandFilter,transmissionFilter, sortField));
-        return "client/selectCar";
+        return Pages.SELECT_CAR;
     }
 
     @GetMapping("/orders/create/{id}")
@@ -125,4 +131,93 @@ public class OrderController {
             return Pages.ERROR;
         }
     }
+
+    @GetMapping("/orders/confirmOrder/{id}")
+    public String confirmOrder(@PathVariable("id") int id, Model model){
+        if (id<=0) return Pages.ERROR;
+        try {
+            orderService.confirmOrder(id);
+            return "redirect:/orders/list";
+        } catch (NoSuchOrderException|OrderProcessingException e) {
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            logger.error(e);
+            return Pages.ERROR;
+        }
+    }
+    @GetMapping("orders/declineOrder/{id}")
+    public String openDeclineOrderPage(@PathVariable("id") int id, Model model){
+        try {
+            Order order = orderService.findById(id);
+            model.addAttribute(PageParameters.ORDER_DTO, Order.toDTO(order));
+            return Pages.DECLINE_ORDER;
+        } catch (NoSuchOrderException e) {
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            logger.error(e);
+            return Pages.ERROR;
+        }
+    }
+
+    @PostMapping("orders/decline")
+    public String declineOrder(OrderDto orderDto,
+                               BindingResult bindingResult, Model model){
+        if (orderDto.getComment().isEmpty()){
+            bindingResult.rejectValue("comment", "error.comment", Messages.ERROR_EMPTY_COMMENT);
+            model.addAttribute(PageParameters.ORDER_DTO, orderDto);
+            return Pages.DECLINE_ORDER;
+        }
+        try {
+            orderService.declineOrder(orderDto.getId(), orderDto.getComment());
+            return "redirect:/orders/list";
+        } catch (NoSuchOrderException e) {
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            logger.error(e);
+            return Pages.ERROR;
+        }
+    }
+
+    @GetMapping("/orders/closeOrder/{id}")
+    public String closeOrder(@PathVariable("id") int id, Model model){
+        try {
+            orderService.closeOrder(id);
+            return "redirect:/orders/list";
+        } catch (NoSuchOrderException e) {
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            logger.error(e);
+            return Pages.ERROR;
+        }
+    }
+
+    @GetMapping("/orders/closeWithDamage/{id}")
+    public String openCloseOrderWithDamagePage(@PathVariable("id") int id, Model model){
+        try {
+            Order order = orderService.findById(id);
+            model.addAttribute(PageParameters.ORDER_DTO, Order.toDTO(order));
+            return Pages.CLOSE_WITH_DAMAGE;
+        } catch (NoSuchOrderException e) {
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            logger.error(e);
+            return Pages.ERROR;
+        }
+    }
+
+    @PostMapping("/orders/closeWithDamage")
+    public String closeOrderWithDamage(OrderDto orderDto,
+                                       BindingResult bindingResult, Model model){
+        if (orderDto.getComment().isEmpty()) bindingResult.rejectValue("comment", "error.comment", Messages.ERROR_EMPTY_COMMENT);
+        if (orderDto.getDamageAmount()==0||orderDto.getDamageAmount()<0) bindingResult.rejectValue("damageAmount", "error.damageAmount", Messages.ERROR_AMOUNT);
+
+        if (bindingResult.hasErrors()){
+            model.addAttribute(PageParameters.ORDER_DTO, orderDto);
+            return Pages.CLOSE_WITH_DAMAGE;
+        }
+        try {
+            orderService.closeOrderWithDamage(orderDto);
+            return "redirect:/orders/list";
+        } catch (NoSuchOrderException e) {
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            logger.error(e);
+            return Pages.ERROR;
+        }
+    }
+
 }

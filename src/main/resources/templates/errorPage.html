@@ -6,6 +6,7 @@
 </head>
 <body>
 <div th:insert="navigation/navbarSelector.html">...</div>
-Some Error
+<!--/*@thymesVar id="errorMessame" type=""*/-->
+<p th:text="#{${errorMessage}}"></p>
 </body>
 </html>

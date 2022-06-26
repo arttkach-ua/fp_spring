@@ -81,6 +81,7 @@ public class Order{
     }
 
     public String getFormattedDate(){
+        if (dateTime== null) return "";
         SimpleDateFormat sdf = new SimpleDateFormat("dd/M/yyyy h:mm a");
         return sdf.format(dateTime);
     }
@@ -96,5 +97,17 @@ public class Order{
         order.setWithDriver(dto.isWithDriver());
         order.calculateSum();
         return order;
+    }
+
+    public static OrderDto toDTO(Order order){
+        OrderDto dto = new OrderDto();
+        dto.setId(order.getId());
+        dto.setClient(order.getClient());
+        dto.setCar(order.getCar());
+        dto.setAmount(order.getRentSum());
+        dto.setComment(order.getManagerComment());
+        dto.setDaysCount(order.getDaysCount());
+        dto.setWithDriver(order.isWithDriver());
+        return dto;
     }
 }

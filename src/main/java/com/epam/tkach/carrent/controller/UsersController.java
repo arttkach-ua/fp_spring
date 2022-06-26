@@ -6,6 +6,7 @@ import com.epam.tkach.carrent.Pages;
 import com.epam.tkach.carrent.entity.Transaction;
 import com.epam.tkach.carrent.entity.User;
 import com.epam.tkach.carrent.entity.enums.CarClass;
+import com.epam.tkach.carrent.entity.enums.OrderStatuses;
 import com.epam.tkach.carrent.entity.enums.Role;
 import com.epam.tkach.carrent.exceptions.NoSuchUserException;
 import com.epam.tkach.carrent.exceptions.UserExistsException;

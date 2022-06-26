@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<!--Decline order form -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+
+                <div class="card-header"  th:text="#{label.decline_order}"></div>
+                <div class="card-body">
+                    <!--/*@thymesVar id="orderDto" type="com.epam.tkach.carrent.util.dto.OrderDto"*/-->
+                    <form class="form-horizontal" th:object="${orderDto}" method="POST" th:action="@{/orders/decline/}">
+                        <!--id-->
+                        <div class="form-group">
+                            <input th:type="hidden" th:field="*{id}" id="id"/>
+                        </div>
+                        <!--client-->
+                        <div class="form-group">
+                            <input th:type="hidden" th:field="*{client}" id="client"/>
+                        </div>
+                        <!--car-->
+                        <div class="form-group">
+                            <input th:type="hidden" th:field="*{car}" id="car"/>
+                        </div>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col" th:text="#{characteristic}"></th>
+                                <th scope="col" th:text="#{value}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td th:text="#{client}"></td>
+                                <td th:text="${orderDto.getClient().getFullName()}"></td>
+                            </tr><!--Client-->
+                            <tr>
+                                <th scope="row">2</th>
+                                <td th:text="#{car}"></td>
+                                <td th:text="${orderDto.getCar().getDescription()}"></td>
+                            </tr><!--Car-->
+                            </tbody>
+                        </table>
+                        <div class="form-group">
+                            <label for="comment" class="cols-sm-2 control-label" th:field="*{comment}" th:text="#{comment}"></label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" th:field="*{comment}" id="comment" th:placeholder="#{comment.placeholder}" />
+                                </div>
+                            </div>
+                            <div class="alert alert-danger" th:if="${#fields.hasErrors('comment')}"
+                                 th:each="e : ${#fields.errors('comment')}" th:text="#{${e}}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <button type="submit" th:text="#{label.decline_order}" class="btn btn-primary btn-lg btn-block login-button"></button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

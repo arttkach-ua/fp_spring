@@ -1,10 +1,12 @@
 package com.epam.tkach.carrent.service;
 
-import com.epam.tkach.carrent.entity.Car;
-import com.epam.tkach.carrent.entity.CarBrand;
-import com.epam.tkach.carrent.entity.Order;
-import com.epam.tkach.carrent.entity.User;
+import com.epam.tkach.carrent.Messages;
+import com.epam.tkach.carrent.entity.*;
+import com.epam.tkach.carrent.entity.enums.InvoiceTypes;
 import com.epam.tkach.carrent.entity.enums.OrderStatuses;
+import com.epam.tkach.carrent.exceptions.NoSuchInvoiceException;
+import com.epam.tkach.carrent.exceptions.NoSuchOrderException;
+import com.epam.tkach.carrent.exceptions.OrderProcessingException;
 import com.epam.tkach.carrent.repos.OrderRepository;
 import com.epam.tkach.carrent.util.dto.OrderDto;
 import com.epam.tkach.carrent.util.pagination.Paged;
@@ -19,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -28,6 +31,15 @@ public class OrderService {
 
     @Autowired
     CarService carService;
+
+    @Autowired
+    InvoiceService invoiceService;
+
+    public Order findById(int id) throws NoSuchOrderException {
+        Optional<Order> opt = orderRepository.findById(id);
+        if (!opt.isPresent()) throw new NoSuchOrderException(Messages.ORDER_NOT_FOUND);
+        return opt.get();
+    }
 
     @Transactional
     public void createNew(OrderDto dto){
@@ -48,6 +60,41 @@ public class OrderService {
         return new Paged<>(postPage, Paging.of(postPage.getTotalPages(), pageNumber, size));
     }
 
+    @Transactional
+    public void confirmOrder(int id) throws NoSuchOrderException, OrderProcessingException {
+        Optional<Order> opt = orderRepository.findById(id);
+        if (!opt.isPresent()) throw new NoSuchOrderException();
+        Order order = opt.get();
+        if (order.getStatus()!=OrderStatuses.NEW) throw new OrderProcessingException(Messages.ORDER_PROCESSING_ERROR);
+        order.setStatus(OrderStatuses.APPROVED);
+        orderRepository.save(order);
+        invoiceService.save(invoiceService.createNew(order, InvoiceTypes.RENT,order.getRentSum(),null));
+    }
+
+    @Transactional
+    public void declineOrder(int id, String comment) throws NoSuchOrderException {
+        Order order = findById(id);
+        order.setStatus(OrderStatuses.CANCELED);
+        order.getCar().setAvailable(true);
+        carService.save(order.getCar());
+        save(order);
+    }
+
+    @Transactional
+    public void closeOrder(int id) throws NoSuchOrderException {
+        //1.Setting order status
+        Order order = findById(id);
+        order.setStatus(OrderStatuses.COMPLETE);
+        save(order);
+        //2. Setting car available to true
+        Car car = order.getCar();
+        car.setAvailable(true);
+        carService.save(car);
+    }
+
+    public void save(Order order){
+        orderRepository.save(order);
+    }
     /**
      * Function that returns field that can be used to sort order list
      * @return
@@ -96,5 +143,21 @@ public class OrderService {
                 return Sort.Direction.ASC;
             default: return Sort.DEFAULT_DIRECTION;
         }
+    }
+
+    @Transactional
+    public void closeOrderWithDamage(OrderDto orderDto) throws NoSuchOrderException {
+        //1.Setting order status
+        Order order = findById(orderDto.getId());
+        order.setStatus(OrderStatuses.HASDAMAGE);
+        order.setManagerComment(orderDto.getComment());
+        save(order);
+        //2. Setting car available to true
+        Car car = order.getCar();
+        car.setAvailable(true);
+        carService.save(car);
+        //3. Create invoice
+        Invoice invoice = invoiceService.createNew(order, InvoiceTypes.DAMAGE, orderDto.getDamageAmount(), orderDto.getComment());
+        invoiceService.save(invoice);
     }
 }

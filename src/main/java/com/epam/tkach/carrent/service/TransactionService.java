@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class TransactionService {
     private static final Logger logger = LogManager.getLogger(TransactionService.class);
@@ -39,6 +41,15 @@ public class TransactionService {
         transaction.setSum(dto.getSum());
         transaction.setUser(dto.getUser());
         transaction.setDescription("Balance top up");
+        transactionRepository.save(transaction);
+    }
+
+    public void createPayment(User user, int invoiceId, double amount){
+        Transaction transaction = new Transaction();
+        transaction.setUser(user);
+        transaction.setTimestamp(LocalDateTime.now());
+        transaction.setDescription("Payment by invoice#" + invoiceId);
+        transaction.setSum(amount*(-1));
         transactionRepository.save(transaction);
     }
 }

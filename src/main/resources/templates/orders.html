@@ -43,7 +43,6 @@
                         <option selected value="" th:text="#{select_general_placeholder}">option</option>
                         <option th:each="option : ${sortList}" th:value="${option}" th:text="#{${option}}"
                                 th:selected="${option == sort_field}"></option>
-
                     </select>
                 </div>
             </div><!--Sorting-->
@@ -89,7 +88,7 @@
                     <td th:text="${entity.getRentSum()}"></td>
                     <td th:text="#{${entity.getStatus()}}">
 
-                    <td th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')&&(entity.getStatus()=='NEW')}">
+                    <td th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')&&(entity.getStatus().name() eq'NEW')}">
                         <a class="btn btn-outline-success"
                            th:href="@{/orders/confirmOrder/{id}(id=${entity.getId()})}" role="button"
                            th:text="#{button.confirm_order}">
@@ -99,9 +98,9 @@
                            th:text="#{button.decline_order}">
                         </a>
                     </td>
-                    <td th:if="${(entity.getStatus() eq'CANCELED')||(entity.getStatus() eq'HASDAMAGE')}"
+                    <td th:if="${(entity.getStatus().name() eq'CANCELED')||(entity.getStatus().name() eq'HASDAMAGE')}"
                         th:text="${entity.getManagerComment()}"></td>
-                    <td th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')&&(entity.getStatus()=='INPROGRESS')}">
+                    <td th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')&&(entity.getStatus().name() eq'INPROGRESS')}">
                         <a class="btn btn-outline-success" th:href="@{/orders/closeOrder/{id}(id=${entity.getId()})}"
                            role="button" th:text="#{button.closeOrder}">
                         </a>

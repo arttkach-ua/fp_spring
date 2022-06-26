@@ -17,10 +17,16 @@ public class Pages {
     public static final String USERS = "users";
     public static final String CARS = "cars";
     public static final String ORDERS = "orders";
+    public static final String INVOICES = "invoices";
 
     //Etc
     public static final String LOGIN = "login";
     public static final String ERROR = "errorPage";
     public static final String MY_PROFILE = "myProfile";
     public static final String TOP_UP = "client/topUp";
+
+    //Orders
+    public static final String CLOSE_WITH_DAMAGE = "manager/closeOrderWithDamage";
+    public static final String DECLINE_ORDER = "manager/declineOrder";
+    public static final String SELECT_CAR = "client/selectCar";
 }

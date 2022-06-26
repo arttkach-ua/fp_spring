@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+
+<!--Close with damage form -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" th:text="#{button.closeOrderWithDamage}"></div>
+                <div class="card-body">
+
+                    <!--/*@thymesVar id="orderDto" type="com.epam.tkach.carrent.util.dto.OrderDto"*/-->
+                    <form class="form-horizontal" th:object="${orderDto}" th:action="@{/orders/closeWithDamage}" method="POST" >
+                        <!--id-->
+                        <div class="form-group">
+                            <input th:type="hidden" th:field="*{id}" id="id"/>
+                        </div>
+                        <!--client-->
+                        <div class="form-group">
+                            <input th:type="hidden" th:field="*{client}" id="client"/>
+                        </div>
+                        <!--car-->
+                        <div class="form-group">
+                            <input th:type="hidden" th:field="*{car}" id="car"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment" class="cols-sm-2 control-label" th:text="#{damage}"></label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                    <input type="text" class="form-control" th:field="*{comment}" id="comment" th:placeholder="#{damage.placeholder}" />
+                                </div>
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('comment')}"
+                                     th:each="e : ${#fields.errors('comment')}" th:text="#{${e}}" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="damageAmount" class="cols-sm-2 control-label" th:text="#{sum}"></label>
+                            <div class="cols-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                    <input type="number" step="0.1" class="form-control" th:field="*{damageAmount}" id="damageAmount" th:placeholder="#{sum.placeholder}" />
+                                </div>
+                                <div class="alert alert-danger" th:if="${#fields.hasErrors('damageAmount')}"
+                                     th:each="e : ${#fields.errors('damageAmount')}" th:text="#{${e}}" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group ">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block login-button" th:text="#{button.closeOrderWithDamage}">
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

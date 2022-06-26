@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:insert="fragments/head.html">...</div>
+</head>
+<body>
+<div th:insert="navigation/navbarSelector.html">...</div>
+<!--FILTERS-->
+<p>
+    <a class="btn btn-primary" data-toggle="collapse" href="#filtersCollapse" role="button" aria-expanded="false" aria-controls="filtersCollapse"
+    th:text="#{filters_and_sorting}">
+    </a>
+</p>
+<div class="collapse" id="filtersCollapse">
+    <div class="container-fluid">
+        <form class="form-horizontal" th:action="@{/invoices/list}" method="get">
+            <div class="row">
+                <!--Paid filter-->
+                <div class="form-group">
+                    <label for="paid_filter" class="control-label" th:text="#{paid}"></label>
+                    <select class="form-control" id="paid_filter" name="paid_filter">
+                        <option selected value="" th:text="#{select_general_placeholder}">option</option>
+                        <option th:each="option : ${paidList}" th:value="${option}" th:text="#{${option}}"
+                                th:selected="${option == paid_filter}"></option>
+                    </select>
+                </div>
+            </div><!--Filters-->
+            <div class="row"><!--Sorting-->
+                <div class="form-group">
+                    <label for="sort_field" class="control-label" th:text="#{sort_by}"></label>
+                    <select class="form-control" id="sort_field" name="sort_field">
+                        <option selected value="" th:text="#{select_general_placeholder}">option</option>
+                        <option th:each="option : ${sortList}" th:value="${option}" th:text="#{${option}}"
+                                th:selected="${option == sort_field}"></option>
+                    </select>
+                </div>
+            </div><!--Sorting-->
+            <button type="submit" class="btn btn-primary" th:text="#{button.filter}"> </button>
+        </form>
+    </div>
+</div>
+<!--Invoice list form-->
+<form method="get">
+    <main class="m-3">
+        <div class="row col-md-6">
+            <table class="table table-striped table-bordered table-sm">
+                <caption style="caption-side: top" th:text="#{navbar.invoices}"></caption>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col" th:text="#{client}"></th>
+                    <th scope="col" th:text="#{order_number}"></th>
+                    <th scope="col" th:text="#{date}"></th>
+                    <th scope="col" th:text="#{type}"></th>
+                    <th scope="col" th:text="#{car}"></th>
+                    <th scope="col" th:text="#{sum}"></th>
+                    <th scope="col" th:text="#{description}"></th>
+                    <th scope="col" th:text="#{paid}"></th>
+                    <th scope="col"></th>
+                </tr>
+
+                <tr th:each="entity : ${entityList.page}" class="table-"
+                    th:classappend="${entity.isPaid() ? success : light}">
+                    <td th:text="${entity.getId()}"></td>
+                    <td th:text="${entity.getClient().getFullName()}"></td>
+                    <td th:text="${entity.getOrder().getId()}"></td>
+                    <td th:text="${entity.getFormattedDate()}"></td>
+                    <td th:text="#{${entity.getType()}}"></td>
+                    <td th:text="${entity.getOrder().getCar().getDescription()}"></td>
+                    <td th:text="${entity.getAmount()}"></td>
+                    <td th:text="${entity.getDescription()}"></td>
+                    <td th:text="#{${entity.isPaid()}}"></td>
+                    <td th:if="${#authorization.expression('hasRole(''ROLE_CLIENT'')')&&(!entity.isPaid())}">
+                        <a class="btn btn-outline-success" th:href="@{/invoices/pay/{id}(id=${entity.getId()})}"
+                           role="button" th:text="#{button.pay_invoice}">
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!--Pagination-->
+        <nav aria-label="Page navigation" class="paging">
+            <ul class="pagination" th:if="${entityList.page.totalPages > 1}">
+                <li class="page-item" th:classappend="${!entityList.paging.isPrevEnabled()? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{'/invoices/list?pageNumber=' + ${entityList.paging.pageNumber - 1} +'&paid_filter=' + ${paid_filter} +'&sort_field=' + ${sort_field}}"
+                       tabindex="-1" th:text="#{pagination.previous}">Previous</a>
+                </li>
+                <th:block th:each="item : ${entityList.paging.getItems()}">
+                    <li class="page-item" th:classappend="${item.index == entityList.paging.pageNumber? 'active' : ''}"
+                        th:if="${item.pageItemType.name() == 'PAGE'}">
+                        <a class="page-link" th:href="@{'/invoices/list?pageNumber=' + ${item.index} + '&paid_filter=' + ${paid_filter} + '&sort_field=' + ${sort_field}}"
+                           th:text="${item.index}"></a>
+                    </li>
+                    <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                        <a class="page-link" href="#">...</a>
+                    </li>
+                </th:block>
+                <li class="page-item" th:classappend="${!entityList.paging.isNextEnabled()? 'disabled' : ''}">
+                    <a class="page-link"
+                       th:href="@{'/invoices/list?pageNumber=' + ${entityList.paging.pageNumber + 1} + '&paid_filter=' + ${paid_filter} + '&sort_field=' + ${sort_field}}" th:text="#{pagination.next}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </main>
+</form>
+
+</body>
+</html>

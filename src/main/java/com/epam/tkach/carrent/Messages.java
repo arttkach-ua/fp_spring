@@ -28,6 +28,8 @@ public class Messages {
     public static final String ACCESS_DENIED = "error.access_denied";
     public static final String LOGIN_SUCCESS = "success.login_success";
     public static final String PASS_NOT_MATCH = "error.passDoNotMatch";
+    public static final String ORDER_PROCESSING_ERROR = "error.orderProcessingFailed";
+    public static final String ORDER_NOT_FOUND = "error.orderNotFound";
 
 }
 
