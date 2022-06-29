@@ -2,20 +2,19 @@ package com.epam.tkach.carrent.entity;
 
 import com.epam.tkach.carrent.entity.enums.CarClass;
 import com.epam.tkach.carrent.util.dto.CarModelDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 @Table(name = "car_models")
 public class CarModel{
     @Id
@@ -51,5 +50,21 @@ public class CarModel{
         dto.setCarClass(carModel.getCarClass());
         dto.setModelName(carModel.getModelName());
         return dto;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarModel carModel = (CarModel) o;
+        return id == carModel.id &&
+                Objects.equals(brand, carModel.brand) &&
+                carClass == carModel.carClass &&
+                Objects.equals(modelName, carModel.modelName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, brand, carClass, modelName);
     }
 }

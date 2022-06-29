@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Setter
@@ -18,7 +19,7 @@ import java.util.StringJoiner;
 @NoArgsConstructor
 @Entity
 @ToString
-@Table(name = "complete_sets", schema = "car_rent_spring")
+@Table(name = "complete_sets")
 public class CompleteSet{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,6 +54,25 @@ public class CompleteSet{
     @Positive(message = "error.nullRentPriceName")
     double engine;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompleteSet that = (CompleteSet) o;
+        return id == that.id &&
+                Double.compare(that.engine, engine) == 0 &&
+                name.equals(that.name) &&
+                carModel.equals(that.carModel) &&
+                bodyStyle == that.bodyStyle &&
+                transmission == that.transmission &&
+                fuelType == that.fuelType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, carModel, bodyStyle, transmission, fuelType, engine);
+    }
 
     public void generateName(){
         StringJoiner joiner = new StringJoiner("/");

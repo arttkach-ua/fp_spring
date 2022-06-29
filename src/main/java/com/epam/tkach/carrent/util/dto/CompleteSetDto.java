@@ -12,6 +12,7 @@ import org.springframework.security.task.DelegatingSecurityContextAsyncTaskExecu
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -50,6 +51,27 @@ public class CompleteSetDto {
             return -1;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompleteSetDto that = (CompleteSetDto) o;
+        return id == that.id &&
+                Double.compare(that.engine, engine) == 0 &&
+                carBrand.equals(that.carBrand) &&
+                name.equals(that.name) &&
+                carModel.equals(that.carModel) &&
+                bodyStyle == that.bodyStyle &&
+                transmission == that.transmission &&
+                fuelType == that.fuelType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, carBrand, name, carModel, bodyStyle, transmission, fuelType, engine);
+    }
+
     public int getCarModelId(){
         if (carModel==null){
             return -1;

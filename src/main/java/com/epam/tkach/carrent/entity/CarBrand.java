@@ -8,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -32,5 +33,19 @@ public class CarBrand{
         carBrand.setCarBrandName(dto.getCarBrandName());
 
         return carBrand;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CarBrand carBrand = (CarBrand) o;
+        return id == carBrand.id &&
+                Objects.equals(carBrandName, carBrand.carBrandName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, carBrandName);
     }
 }

@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -12,6 +13,21 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @ToString
 public class TariffDto {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TariffDto tariffDto = (TariffDto) o;
+        return id == tariffDto.id &&
+                Double.compare(tariffDto.rentPrice, rentPrice) == 0 &&
+                Double.compare(tariffDto.driverPrice, driverPrice) == 0 &&
+                Objects.equals(name, tariffDto.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, rentPrice, driverPrice);
+    }
 
     int id;
 

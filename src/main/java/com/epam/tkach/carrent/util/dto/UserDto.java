@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Setter
 @Getter
@@ -37,6 +38,26 @@ public class UserDto {
 
 //    @Enumerated(EnumType.ORDINAL)
 //    private Role role;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Id == userDto.Id &&
+                Objects.equals(email, userDto.email) &&
+                Objects.equals(firstName, userDto.firstName) &&
+                Objects.equals(secondName, userDto.secondName) &&
+                Objects.equals(phoneNumber, userDto.phoneNumber) &&
+                Objects.equals(documentInfo, userDto.documentInfo) &&
+                Objects.equals(role, userDto.role) &&
+                Objects.equals(receiveNotifications, userDto.receiveNotifications);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Id, email, firstName, secondName, phoneNumber, documentInfo, role, receiveNotifications);
+    }
 
     //private boolean blocked;
 

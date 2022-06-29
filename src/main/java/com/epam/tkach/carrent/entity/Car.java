@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @Setter
@@ -72,6 +73,27 @@ public class Car{
         car.setTariff(dto.getTariff());
         car.setAvailable(true);
         return car;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return id == car.id &&
+                graduationYear == car.graduationYear &&
+                available == car.available &&
+                brand.equals(car.brand) &&
+                model.equals(car.model) &&
+                completeSet.equals(car.completeSet) &&
+                stateNumber.equals(car.stateNumber) &&
+                vinCode.equals(car.vinCode) &&
+                tariff.equals(car.tariff);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, brand, model, graduationYear, completeSet, stateNumber, vinCode, tariff, available);
     }
 
     public static CarDto toDto(Car car){
