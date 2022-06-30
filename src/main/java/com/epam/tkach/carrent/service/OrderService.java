@@ -4,6 +4,7 @@ import com.epam.tkach.carrent.Messages;
 import com.epam.tkach.carrent.entity.*;
 import com.epam.tkach.carrent.entity.enums.InvoiceTypes;
 import com.epam.tkach.carrent.entity.enums.OrderStatuses;
+import com.epam.tkach.carrent.exceptions.NoSuchCarException;
 import com.epam.tkach.carrent.exceptions.NoSuchInvoiceException;
 import com.epam.tkach.carrent.exceptions.NoSuchOrderException;
 import com.epam.tkach.carrent.exceptions.OrderProcessingException;
@@ -42,13 +43,14 @@ public class OrderService {
     }
 
     @Transactional
-    public void createNew(OrderDto dto){
+    public void createNew(OrderDto dto) throws OrderProcessingException, NoSuchCarException {
         //1. creating new order
         Order order = Order.getFromDto(dto);
         order.setStatus(OrderStatuses.NEW);
         order.setDateTime(new Date());
         orderRepository.save(order);
         //2. set
+        if (carService.findById(order.getCar().getId()).isAvailable()==false) throw new OrderProcessingException(Messages.CAR_IS_NOT_AVALIBLE);
         Car car = order.getCar();
         car.setAvailable(false);
         carService.save(car);

@@ -3,13 +3,11 @@ package com.epam.tkach.carrent.controller;
 import com.epam.tkach.carrent.Messages;
 import com.epam.tkach.carrent.PageParameters;
 import com.epam.tkach.carrent.Pages;
-import com.epam.tkach.carrent.entity.Transaction;
 import com.epam.tkach.carrent.entity.User;
-import com.epam.tkach.carrent.entity.enums.CarClass;
-import com.epam.tkach.carrent.entity.enums.OrderStatuses;
 import com.epam.tkach.carrent.entity.enums.Role;
 import com.epam.tkach.carrent.exceptions.NoSuchUserException;
 import com.epam.tkach.carrent.exceptions.UserExistsException;
+import com.epam.tkach.carrent.service.EmailService;
 import com.epam.tkach.carrent.service.TransactionService;
 import com.epam.tkach.carrent.service.UserService;
 import com.epam.tkach.carrent.util.dto.TransactionDto;
@@ -18,11 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,6 +35,9 @@ public class UsersController {
 
     @Autowired
     TransactionService transactionService;
+
+    @Autowired
+    EmailService emailService;
 
     @GetMapping("/users/list")
     public String showUsers(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
@@ -129,6 +128,7 @@ public class UsersController {
                         @Valid TransactionDto transactionDto,
                         BindingResult bindingResult,
                         Model model) {
+        //emailService.sendSimpleMessage("mega-milik@ukr.net","dddd","ddddd");
         //Validation
         if (bindingResult.hasErrors()) {
             model.addAttribute(PageParameters.TRANSACTION_DTO, transactionDto);
@@ -141,6 +141,7 @@ public class UsersController {
             transactionService.topUp(transactionDto);
             //Setting new balance to session
             session.setAttribute("balance", transactionService.getUserBalance(transactionDto.getUser().getEmail()));
+            emailService.notifyAboutTopUp(transactionDto.getUser(),(String)session.getAttribute("local"),transactionDto.getSum());
             return "redirect:/";
         } catch (NoSuchUserException e) {
             logger.error(e);

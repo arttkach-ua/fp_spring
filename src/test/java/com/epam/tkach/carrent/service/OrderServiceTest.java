@@ -2,10 +2,7 @@ package com.epam.tkach.carrent.service;
 
 import com.epam.tkach.carrent.entity.*;
 import com.epam.tkach.carrent.entity.enums.*;
-import com.epam.tkach.carrent.exceptions.NoSuchOrderException;
-import com.epam.tkach.carrent.exceptions.NoSuchUserException;
-import com.epam.tkach.carrent.exceptions.OrderProcessingException;
-import com.epam.tkach.carrent.exceptions.UserExistsException;
+import com.epam.tkach.carrent.exceptions.*;
 import com.epam.tkach.carrent.repos.CarBrandRepository;
 import com.epam.tkach.carrent.util.dto.*;
 import com.epam.tkach.carrent.util.pagination.Paged;
@@ -59,6 +56,10 @@ class OrderServiceTest {
             assertEquals(NoSuchUserException.class, e.getClass());
         } catch (NoSuchOrderException e) {
             assertEquals(NoSuchOrderException.class, e.getClass());
+        } catch (OrderProcessingException e) {
+            assertEquals(OrderProcessingException.class, e.getClass());
+        } catch (NoSuchCarException e) {
+            assertEquals(NoSuchCarException.class, e.getClass());
         }
 
     }
@@ -76,7 +77,11 @@ class OrderServiceTest {
             Paged<Order> pageActual = orderService.getPage(pageNumber, size,null,null,null, null);
             assertEquals(pageActual.getPage().getContent().size(), 5);
         } catch (NoSuchUserException e) {
-
+            assertEquals(NoSuchUserException.class, e.getClass());
+        } catch (OrderProcessingException e) {
+            assertEquals(OrderProcessingException.class, e.getClass());
+        } catch (NoSuchCarException e) {
+            assertEquals(NoSuchCarException.class, e.getClass());
         }
     }
 
@@ -88,8 +93,12 @@ class OrderServiceTest {
             Order order = orderService.findById(2);
             assertEquals(OrderStatuses.APPROVED, order.getStatus());
             assertEquals(false,order.getCar().isAvailable());
-        } catch (NoSuchUserException | NoSuchOrderException | OrderProcessingException e) {
+        } catch (NoSuchUserException | NoSuchOrderException e) {
             assertEquals(NoSuchOrderException.class, e.getClass());
+        }catch (OrderProcessingException e) {
+            assertEquals(OrderProcessingException.class, e.getClass());
+        } catch (NoSuchCarException e) {
+            assertEquals(NoSuchCarException.class, e.getClass());
         }
     }
 
@@ -103,6 +112,10 @@ class OrderServiceTest {
             assertEquals(true,order.getCar().isAvailable());
         } catch (NoSuchUserException | NoSuchOrderException e) {
             assertEquals(NoSuchOrderException.class, e.getClass());
+        } catch (OrderProcessingException e) {
+            assertEquals(OrderProcessingException.class, e.getClass());
+        } catch (NoSuchCarException e) {
+            assertEquals(NoSuchCarException.class, e.getClass());
         }
     }
 
@@ -118,7 +131,7 @@ class OrderServiceTest {
     void closeOrderWithDamage() {
     }
 
-    private void addToDB(int count) throws NoSuchUserException {
+    private void addToDB(int count) throws NoSuchUserException, OrderProcessingException, NoSuchCarException {
 
         //Brand
         CarBrandDto carBrand = new CarBrandDto(1, "Audi");

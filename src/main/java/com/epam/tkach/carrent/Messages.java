@@ -30,6 +30,7 @@ public class Messages {
     public static final String PASS_NOT_MATCH = "error.passDoNotMatch";
     public static final String ORDER_PROCESSING_ERROR = "error.orderProcessingFailed";
     public static final String ORDER_NOT_FOUND = "error.orderNotFound";
+    public static final String CAR_IS_NOT_AVALIBLE = "error.carIsNotAvalible";
 
 }
 

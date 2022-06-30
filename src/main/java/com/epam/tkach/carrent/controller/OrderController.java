@@ -97,7 +97,13 @@ public class OrderController {
             model.addAttribute(PageParameters.ORDER_DTO, orderDto);
             return Pages.CREATE_ORDER;
         }
-        orderService.createNew(orderDto);
+        try {
+            orderService.createNew(orderDto);
+        } catch (OrderProcessingException|NoSuchCarException e) {
+            logger.error(e);
+            model.addAttribute(PageParameters.ERROR_MESSAGE, e.getMessage());
+            return Pages.ERROR;
+        }
         System.out.println(orderDto.toString());
         return "redirect:/";
     }
