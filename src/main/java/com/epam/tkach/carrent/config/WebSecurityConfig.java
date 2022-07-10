@@ -35,8 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return (UserDetailsService) email -> {
             Optional<User> user = userService.findByEmail(email);
             if (user.isPresent()) {
-                System.out.println(user.get().toString());
-                System.out.println(user.get());
+                if (user.get().isBlocked()) throw new UsernameNotFoundException("User is blocked:::" + email);
                 return user.get();
 
             } else {

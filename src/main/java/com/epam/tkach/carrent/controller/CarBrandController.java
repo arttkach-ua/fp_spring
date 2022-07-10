@@ -28,7 +28,6 @@ public class CarBrandController {
     public String showCarBrands(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                                 @RequestParam(value = "size", required = false, defaultValue = "5") int size,
                                 Model model) {
-
         model.addAttribute("carBrands", carBrandService.getPage(pageNumber, size));
         return Pages.CAR_BRANDS;
     }
