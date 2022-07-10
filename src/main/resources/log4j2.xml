@@ -22,6 +22,8 @@
     <Loggers>
         <Root level="all">
             <AppenderRef ref="ErrorLog"/>
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ConsoleAppender"/>
         </Root>
     </Loggers>
 </Configuration>

@@ -112,10 +112,10 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 		<!-- Exclude Spring Boot's Default Logging -->
-		<!--
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
@@ -123,7 +123,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		-->
+
 		<!-- Add Log4j2 Dependency -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
