@@ -31,7 +31,7 @@ public class CarModelController {
     @Autowired
     private CarModelService carModelService;
 
-    @GetMapping("carModels/list")
+    @GetMapping("/carModels/list")
     public String showCarBrands(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
                                 @RequestParam(value = "size", required = false, defaultValue = "5") int size, Model model) {
 
@@ -39,7 +39,7 @@ public class CarModelController {
         return Pages.CAR_MODELS;
     }
 
-    @PostMapping(value = "/saveCarModel")
+    @PostMapping(value = "/carModels/saveCarModel")
     public String addNewCarModel(@Valid CarModelDto carModelDto,
                                  BindingResult bindingResult,
                                  Model model){
@@ -53,17 +53,17 @@ public class CarModelController {
         System.out.println(carModelDto.toString());
         logger.debug("adding new Car model");
         logger.debug(carModelDto.toString());
-        return "redirect:/" + Pages.CAR_MODELS;
+        return "redirect:/carModels/list";
     }
 
-    @GetMapping(value = "newCarModel")
+    @GetMapping(value = "/carModels/newCarModel")
     public String openNewCarModelPage(Model model){
         model.addAttribute(PageParameters.CAR_MODEL_DTO, new CarModelDto());
         model.addAttribute(PageParameters.CAR_CLASSES, CarClass.values());
         model.addAttribute(PageParameters.CAR_BRANDS, carBrandService.getAll());
         return Pages.CAR_MODEL_PAGE;
     }
-    @GetMapping(value = "carModel/edit/{id}")
+    @GetMapping(value = "/carModels/edit/{id}")
     public String editCarModel(@PathVariable("id") int id, Model model){
         try {
             CarModel carModel = carModelService.findById(id);

@@ -26,7 +26,7 @@
                     <td th:text="#{${model.carClass}}">car class</td>
                     <td th:text="${model.getBrand().getCarBrandName()}">title</td>
                     <td th:text="${model.getModelName()}">title</td>
-                    <td><a th:href="@{carModel/edit/{id}(id=${model.id})}"th:text="#{edit}"/></td>
+                    <td><a th:href="@{/carModels/edit/{id}(id=${model.id})}"th:text="#{edit}"/></td>
                 </tr>
             </tbody>
         </table>

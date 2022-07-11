@@ -38,10 +38,10 @@
                         language
                     </i>
                 </button>
-                <div class="dropdown-menu ml-auto" aria-labelledby="dropdownMenuButton">
-                    <form class="form-inline" method="post" action="controller?action=i18n">
-                        <button type="submit" name="ua" class="dropdown-item">Ukrainian</button>
-                        <button type="submit" name="en" class="dropdown-item">English</button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <form class="form-inline" method="post" th:action="@{/international}">
+                        <button type="submit" name="lang" value="ua" class="dropdown-item">Ukrainian</button>
+                        <button type="submit" name="lang" value="en" class="dropdown-item">English</button>
                     </form>
                 </div>
             </div>

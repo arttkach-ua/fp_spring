@@ -15,7 +15,7 @@
                 <div class="card-body">
 
                     <!--/*@thymesVar id="carModelDto" type="com.epam.tkach.carrent.util.dto.CarModelDto"*/-->
-                    <form class="form-horizontal" method="POST" th:action="@{/saveCarModel}" th:object="${carModelDto}">
+                    <form class="form-horizontal" method="POST" th:action="@{/carModels/saveCarModel}" th:object="${carModelDto}">
 
                         <div class="form-group">
                             <input type="number" th:type="hidden" name="id" id="id" th:field="*{id}"/>
